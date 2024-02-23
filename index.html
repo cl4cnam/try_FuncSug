@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Try FuncSug online</title>
+		<link rel="shortcut icon" href="#">
+		<link rel="stylesheet" href="lib.css">
+		<link rel="stylesheet" href="tryit.css">
+	</head>
+
+	<body>
+		<div id="control">
+			<span>Load examples: </span>
+			<select id="example">
+				<option value="helloWorld" selected>Hello World!</option>
+				<option value="helloYou">Hello You!</option>
+				<option value="guessNumber">Guess the Number!</option>
+			</select>
+			<button id="run">Run</button>
+		</div>
+		<div id="tabs">
+			<span id="html">HTML</span>
+			<span id="css">CSS</span>
+			<span id="javascript">JavaScript</span>
+			<span id="funcsug">FuncSug</span>
+			<span id="result">Result</span>
+<!--
+			<span id="console">Console</span>
+-->
+		</div>
+		<div id="scene">
+			<div id="item_html"><textarea spellcheck="false"></textarea></div>
+			<div id="item_css"><textarea spellcheck="false"></textarea></div>
+			<div id="item_javascript"><textarea spellcheck="false"></textarea></div>
+			<div id="item_funcsug"><textarea spellcheck="false"></textarea></div>
+			<div id="item_result"><iframe></iframe></div>
+<!--
+			<div id="item_console"></div>
+-->
+		</div>
+		<script src="examples.js"></script>
+		<script src="tryit.js"></script>
+	</body>
+</html>
