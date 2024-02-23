@@ -1,0 +1,59 @@
+#control {
+	margin-bottom: 10px;
+}
+
+#control > * {
+	margin-right: 10px;
+}
+
+#tabs {
+	display: flex;
+}
+
+#tabs span {
+	display: block;
+	background-color: #c0ffff;
+	text-decoration: none;
+	border-radius: 10px 10px 0 0;
+	padding: 5px;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+#tabs span[clicked] {
+	background-color: #00cccc;
+}
+
+#tabs span:hover {
+	background-color: #60ffff;
+}
+
+#tabs span[clicked]:hover {
+	background-color: #00cccc;
+}
+
+#scene {
+	flex-grow: 1;
+	display: flex;
+}
+
+#scene > div {
+	flex-grow: 1;
+	padding: 5px;
+	background-color: #00cccc;
+}
+
+textarea, iframe {
+	flex-grow: 1;
+	resize: none;
+}
+
+iframe {
+	background-color: white;
+}
+
+html, body {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
