@@ -1,11 +1,21 @@
 examples = {
+	empty: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,``
+	],
+	//=============================
 	helloWorld: ['text',
 		`<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>Hello World</title>
-		<link rel="shortcut icon" href="#">
 	</head>
 
 	<body>
@@ -18,8 +28,6 @@ examples = {
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>Hello World</title>
-		<link rel="shortcut icon" href="#">
 	</head>
 
 	<body>
@@ -34,8 +42,6 @@ displayNewMessage('Hello, ' + theName + '!')`
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>Hello World</title>
-		<link rel="shortcut icon" href="#">
 	</head>
 
 	<body>
@@ -54,5 +60,37 @@ while triedNumber != numberToGuess:
 		displayNewMessage('Too high! Try again!')
 	if triedNumber = numberToGuess:
 		displayNewMessage('Well Done!')`
+	],
+	//=============================
+	calljs: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,`function square(n) {
+	return n*n
+}`,`var number := 5
+
+# 'square' is defined in the 'JavaScript' tab
+displayNewMessage(   'square of ' + number + ': ' + ( calljs square(number) )   )`
+	],
+	//=============================
+	js: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`var a := 2025
+var b := js (a):
+	return Math.sqrt(a)
+displayNewMessage('sqrt(' + a + ') = ' + b)`
 	],
 }
