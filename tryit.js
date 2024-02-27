@@ -71,8 +71,8 @@ function adaptHtml(ps_htmlText, ps_cssText, ps_javascriptText, ps_funcsugText) {
 		<link rel="stylesheet" href="data:text/css;charset=utf-8,` + escape(ps_cssText) + `">
 	</head>`).replace('</body>',`		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/libStd.fg" type="application/funcsug"></script>
 		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/libDOM.fg" type="application/funcsug"></script>
-		<script src="data:text/plain;charset=utf-8,` + encodeURI(ps_funcsugText) + `" type="application/funcsug"></script>
-		<script src="data:application/javascript;charset=utf-8,` + encodeURI(ps_javascriptText) + `"></script>
+		<script src="data:text/plain;charset=utf-8,` + encodeURIComponent(ps_funcsugText) + `" type="application/funcsug"></script>
+		<script src="data:application/javascript;charset=utf-8,` + encodeURIComponent(ps_javascriptText) + `"></script>
 		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/parser.js"></script>
 		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/parserPy.js"></script>
 		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/interpreter.js"></script>
@@ -92,7 +92,8 @@ $('example').addEventListener('change', function(evt){
 })
 
 $('run').addEventListener('click', evt=>{
-	iframe.srcdoc = adaptHtml(htmlElt.value, cssElt.value, javascriptElt.value, funcsugElt.value)
+	const ls_adaptedHtml = adaptHtml(htmlElt.value, cssElt.value, javascriptElt.value, funcsugElt.value)
+	iframe.srcdoc = ls_adaptedHtml
 	
 	//~ state = 1
 	$('result').dispatchEvent(new Event('click'))
