@@ -93,4 +93,108 @@ var b := js (a):
 	return Math.sqrt(a)
 displayNewMessage('sqrt(' + a + ') = ' + b)`
 	],
+	//=============================
+	parallel: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`parallel ||
+	waitSeconds(5)
+||
+	waitSeconds(1)
+displayNewMessage('Both branches are terminated')`
+	],
+	//=============================
+	parallelReturn: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`var result := parallel ||
+	waitSeconds(5)
+	'value #1'
+||
+	waitSeconds(1)
+	'value #2'
+displayNewMessage('Both branches are terminated')
+displayNewMessage(result)`
+	],
+	//=============================
+	parallelAfter: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`parallel exitAfter 1 finished ||
+	waitSeconds(5)
+||
+	waitSeconds(1)
+displayNewMessage('A branch is terminated')`
+	],
+	//=============================
+	parallelWith: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`parallel exitWith branch 2 ||
+	waitSeconds(10)
+||
+	waitSeconds(5)
+||
+	waitSeconds(1)
+||
+	waitSeconds(20)
+displayNewMessage('Branch #2 is terminated')`
+	],
+	//=============================
+	parallelSelect: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`var speedyCar := parallel(select 2) ||
+||=================
+	waitSeconds(10)
+...---
+	displayNewMessage("You can't see me because I'm too late: My branch won't be selected")
+	'car #1'
+||================
+	waitSeconds(5)
+...---
+	displayNewMessage("I (car #2) am in a selected branch")
+	'car #2'
+||================
+	waitSeconds(1)
+...---
+	displayNewMessage("I (car #3) am in a selected branch")
+	'car #3'
+||=================
+	waitSeconds(20)
+...---
+	displayNewMessage("You can't see me because I'm too late: My branch won't be selected")
+	'car #4'
+displayNewMessage(speedyCar + ' is a speedy car')`
+	],
 }
