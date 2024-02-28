@@ -6,6 +6,28 @@
 	margin-right: 10px;
 }
 
+button {
+	font-size: 2em;
+	vertical-align: top;
+	appearance: none;
+	border: 3px outset;
+	border-color: #fc4;
+	border-radius: 0px;
+	background-color: #fc4;
+	cursor: pointer;
+}
+
+button:active {
+	border: 3px inset;
+	border-color: #fb3;
+	background-color: #fb3;
+}
+
+button:hover {
+	border-color: #fd6;
+	background-color: #fd6;
+}
+
 #tabs {
 	display: flex;
 }
