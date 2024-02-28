@@ -103,11 +103,16 @@ displayNewMessage('sqrt(' + a + ') = ' + b)`
 
 	<body>
 	</body>
-</html>`,``,``,`parallel ||
+</html>`,``,``,`displayNewMessage('Please, wait...')
+
+parallel ||
 	waitSeconds(5)
 ||
 	waitSeconds(1)
-displayNewMessage('Both branches are terminated')`
+
+displayNewMessage('Both branches are terminated')
+
+displayNewMessage('--- The End ---')`
 	],
 	//=============================
 	parallelReturn: ['text',
@@ -119,14 +124,19 @@ displayNewMessage('Both branches are terminated')`
 
 	<body>
 	</body>
-</html>`,``,``,`var result := parallel ||
+</html>`,``,``,`displayNewMessage('Please, wait...')
+
+var result := parallel ||
 	waitSeconds(5)
 	'value #1'
 ||
 	waitSeconds(1)
 	'value #2'
+
 displayNewMessage('Both branches are terminated')
-displayNewMessage(result)`
+displayNewMessage(result)
+
+displayNewMessage('--- The End ---')`
 	],
 	//=============================
 	parallelAfter: ['text',
@@ -138,11 +148,16 @@ displayNewMessage(result)`
 
 	<body>
 	</body>
-</html>`,``,``,`parallel exitAfter 1 finished ||
+</html>`,``,``,`displayNewMessage('Please, wait...')
+
+parallel exitAfter 1 finished ||
 	waitSeconds(5)
 ||
 	waitSeconds(1)
-displayNewMessage('A branch is terminated')`
+
+displayNewMessage('A branch is terminated')
+
+displayNewMessage('--- The End ---')`
 	],
 	//=============================
 	parallelWith: ['text',
@@ -154,7 +169,9 @@ displayNewMessage('A branch is terminated')`
 
 	<body>
 	</body>
-</html>`,``,``,`parallel exitWith branch 2 ||
+</html>`,``,``,`displayNewMessage('Please, wait...')
+
+parallel exitWith branch 2 ||
 	waitSeconds(10)
 ||
 	waitSeconds(5)
@@ -162,7 +179,10 @@ displayNewMessage('A branch is terminated')`
 	waitSeconds(1)
 ||
 	waitSeconds(20)
-displayNewMessage('Branch #2 is terminated')`
+
+displayNewMessage('Branch #2 is terminated')
+
+displayNewMessage('--- The End ---')`
 	],
 	//=============================
 	parallelSelect: ['text',
@@ -174,7 +194,9 @@ displayNewMessage('Branch #2 is terminated')`
 
 	<body>
 	</body>
-</html>`,``,``,`var speedyCar := parallel(select 2) ||
+</html>`,``,``,`displayNewMessage('Please, wait...')
+
+var speedyCar := parallel(select 2) ||
 ||=================
 	waitSeconds(10)
 ...---
@@ -195,6 +217,9 @@ displayNewMessage('Branch #2 is terminated')`
 ...---
 	displayNewMessage("You can't see me because I'm too late: My branch won't be selected")
 	'car #4'
-displayNewMessage(speedyCar + ' is a speedy car')`
+
+displayNewMessage(speedyCar + ' is a speedy car')
+
+displayNewMessage('--- The End ---')`
 	],
 }
