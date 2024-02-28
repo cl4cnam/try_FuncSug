@@ -52,11 +52,11 @@ window.onload = async function() {
 		})
 	}
 	
-	//~ for (const tab_item of tab_items) {
-		//~ tab_item.addEventListener('input', evt=>{
-			//~ state = 2
-		//~ })
-	//~ }
+	for (const tab_item of tab_items) {
+		tab_item.addEventListener('input', evt=>{
+			$('result').innerHTML = 'Old Result'
+		})
+	}
 	
 	//~ loadExample('https://cl4cnam.github.io/Memory2/memory.html', '', '', '')
 	//~ loadExample('guessTheNumberPy.html', '', '', '')
@@ -96,5 +96,8 @@ $('run').addEventListener('click', evt=>{
 	iframe.srcdoc = ls_adaptedHtml
 	
 	//~ state = 1
-	$('result').dispatchEvent(new Event('click'))
+	$('result').innerHTML = 'Result'
+	iframe.onload = function(evt) {
+		$('result').dispatchEvent(new Event('click'))
+	}
 })
