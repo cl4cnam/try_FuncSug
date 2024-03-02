@@ -37,6 +37,30 @@ var theName := awaitHumanText()
 displayNewMessage('Hello, ' + theName + '!')`
 	],
 	//=============================
+	helloYouLessIndiscreet: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,`.final {
+	background-color: #80ffff;
+	margin: auto;
+}`,``,`displayNewMessage('What is your name?')
+parallel exitAfter 1 finished ||
+	var theName := awaitHumanText()
+	displayNewMessage('Hello, ' + theName + '!')
+||
+	waitSeconds(5)
+	displayNewMessage("Oops, maybe, I'm being too indiscreet!")
+
+# '.final' is defined in the 'CSS' tab
+displayNewMessageIn('--- The End ---', 'body/final')`
+	],
+	//=============================
 	guessNumber: ['text',
 		`<!DOCTYPE html>
 <html>
@@ -220,6 +244,51 @@ var speedyCar := parallel(select 2) ||
 
 displayNewMessage(speedyCar + ' is a speedy car')
 
+displayNewMessage('--- The End ---')`
+	],
+	//=============================
+	break: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage('Please, wait...')
+
+var myBranch
+
+parallel ||
+	@myBranch
+	waitSeconds(2)
+	displayNewMessage("You can't see me because my branch has been broken")
+||
+	waitSeconds(1)
+	break myBranch
+
+displayNewMessage('--- The End ---')`
+	],
+	//=============================
+	awaitClickBip: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<button disabled>Click me!</button>
+	</body>
+</html>`,``,``,`displayNewMessage('Note: the button is disabled by HTML code!')
+displayNewMessage('Please, wait 5 seconds..., the button will be enabled!')
+waitSeconds(5)
+
+# the argument of awaitClickBip has to be a HTMLElement or a CSS selector
+awaitClickBip('button')
+
+displayNewMessage('Note that the button is disabled again!')
 displayNewMessage('--- The End ---')`
 	],
 }
