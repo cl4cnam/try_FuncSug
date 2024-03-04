@@ -291,4 +291,58 @@ awaitClickBip('button')
 displayNewMessage('Note that the button is disabled again!')
 displayNewMessage('--- The End ---')`
 	],
+	//=============================
+	awaitVariable: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage('Please, wait...')
+
+var myVariable
+
+parallel ||
+	waitSeconds(2)
+	myVariable := 'Anything'
+||
+	displayNewMessage("Before the change of myVariable")
+	# await a change of myVariable
+	awaitBip myVariable
+	displayNewMessage("myVariable has just been changed")
+
+displayNewMessage('--- The End ---')`
+	],
+	//=============================
+	awaitBool: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage('Please, wait...')
+
+var myVariable
+
+parallel ||
+	waitSeconds(5)
+	myVariable := 'A'
+	displayNewMessage("This ('A') does not work: 'B' is awaited")
+	
+	waitSeconds(5)
+	myVariable := 'B'
+||
+	displayNewMessage("Before myVariable is 'B'")
+	# await a boolean condition
+	awaitBool (myVariable = 'B')
+	displayNewMessage("Now, myVariable is 'B'")
+
+displayNewMessage('--- The End ---')`
+	],
 }
