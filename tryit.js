@@ -64,6 +64,7 @@ window.onload = async function() {
 	
 	$('html').dispatchEvent(new Event('click'))
 	$('example').dispatchEvent(new Event('change'))
+	$('result').innerHTML = 'Result'
 }
 
 function adaptHtml(ps_htmlText, ps_cssText, ps_javascriptText, ps_funcsugText) {
@@ -81,6 +82,7 @@ function adaptHtml(ps_htmlText, ps_cssText, ps_javascriptText, ps_funcsugText) {
 }
 
 $('example').addEventListener('change', function(evt){
+	$('result').innerHTML = 'Old Result'
 	const item = examples[this.value]
 	if (item[0] === 'text') {
 		loadTextExample(...item.slice(1))
