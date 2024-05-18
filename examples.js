@@ -345,4 +345,108 @@ parallel ||
 
 displayNewMessage('--- The End ---')`
 	],
+	//=============================
+	tbcDemo0: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<button id="b0" disabled>Zero</button>
+		<button id="b1a" disabled>One A</button>
+		<button id="b1b" disabled>One B</button>
+		<button id="b2" disabled>Two</button>
+	</body>
+</html>`,``,``,`var msg := displayNewMessage('')
+while true:
+	awaitClickBeep('#b0')
+	displayMessageIn('0', msg)
+	parallel exitAfter 1 finished ||
+		awaitClickBeep('#b1a')
+		displayMessageIn('1A', msg)
+	||
+		awaitClickBeep('#b1b')
+		displayMessageIn('1B', msg)
+	awaitClickBeep('#b2')
+	displayMessageIn('2', msg)`
+	],
+	//=============================
+	tbcDemo1: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<button id="b0" disabled>Zero</button>
+		<button id="b1a" disabled>One A</button>
+		<button id="b1b" disabled>One B</button>
+		<button id="b2" disabled>Two</button>
+	</body>
+</html>`,``,``,`var msg := displayNewMessage('')
+while true:
+	var waitingLoop
+	while true: @waitingLoop
+		parallel exitAfter 1 finished ||
+			awaitClickBip('#b0')
+			displayMessageIn('0', msg)
+			break waitingLoop
+		||
+			waitSeconds(1.5)
+		displayMessageIn('hurry up', msg)
+		waitSeconds(2.5)
+		displayMessageIn('', msg)
+	parallel exitAfter 1 finished ||
+		awaitClickBeep('#b1a')
+		displayMessageIn('1A', msg)
+	||
+		awaitClickBeep('#b1b')
+		displayMessageIn('1B', msg)
+	||
+		waitSeconds(2)
+		displayMessageIn('too slow', msg)
+	awaitClickBeep('#b2')
+	displayMessageIn('2', msg)`
+	],
+	//=============================
+	tbcDemo2: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`while true:
+	parallel ||
+		displayNewMessage('x0')
+		waitSeconds(1)
+		displayNewMessage('x1')
+	||
+		displayNewMessage('y0')
+		waitSeconds(1)
+		displayNewMessage('y1')
+	waitSeconds(1)`
+	],
+	//=============================
+	tbcDemo3: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`while true:
+	displayMessageIn('', 'body')
+	displayNewMessage('What is your name?')
+	var name := awaitHumanText()
+	displayNewMessage('Hello ' + name)
+	waitSeconds(1)`
+	],
 }
