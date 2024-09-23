@@ -118,6 +118,69 @@ var b := js (a):
 displayNewMessage('sqrt(' + a + ') = ' + b)`
 	],
 	//=============================
+	soundSequence: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`# Available sounds in this test environment:
+# castanets(8s), dingding(12s), harmonica(7s), rattle(3s), saw(10s), shshsh(4s) squeak(6s), tactactac(4s)
+
+displayNewMessage('Starting sounds...')
+
+playSoundFile('rattle.mp3')
+playSoundFile('tactactac.mp3')
+playSoundFile('dingding.mp3')
+
+displayNewMessage('--- The End ---')`
+	],
+	//=============================
+	soundParallel: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage('Starting sounds...')
+
+parallel ||
+	playSoundFile('rattle.mp3')
+||
+	playSoundFile('tactactac.mp3')
+||
+	playSoundFile('dingding.mp3')
+
+displayNewMessage('--- The End ---')`
+	],
+	//=============================
+	soundParallelMin: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage('Starting sounds...')
+
+parallel exitAfter 1 finished ||
+	playSoundFile('rattle.mp3')
+||
+	playSoundFile('tactactac.mp3')
+||
+	playSoundFile('dingding.mp3')
+
+displayNewMessage('--- The End ---')`
+	],
+	//=============================
 	parallel: ['text',
 		`<!DOCTYPE html>
 <html>
