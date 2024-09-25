@@ -148,7 +148,10 @@ displayNewMessage('--- The End ---')`
 
 	<body>
 	</body>
-</html>`,``,``,`displayNewMessage('Starting sounds...')
+</html>`,``,``,`# Available sounds in this test environment:
+# castanets(8s), dingding(12s), harmonica(7s), rattle(3s), saw(10s), shshsh(4s) squeak(6s), tactactac(4s)
+
+displayNewMessage('Starting sounds...')
 
 parallel ||
 	playSoundFile('rattle.mp3')
@@ -169,7 +172,10 @@ displayNewMessage('--- The End ---')`
 
 	<body>
 	</body>
-</html>`,``,``,`displayNewMessage('Starting sounds...')
+</html>`,``,``,`# Available sounds in this test environment:
+# castanets(8s), dingding(12s), harmonica(7s), rattle(3s), saw(10s), shshsh(4s) squeak(6s), tactactac(4s)
+
+displayNewMessage('Starting sounds...')
 
 parallel exitAfter 1 finished ||
 	playSoundFile('rattle.mp3')
