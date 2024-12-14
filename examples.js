@@ -86,6 +86,25 @@ while triedNumber != numberToGuess:
 		displayNewMessage('Well Done!')`
 	],
 	//=============================
+	buttonSequence: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<button id="button1" disabled>Button #1</button>
+		<button id="button2" disabled>Button #2</button>
+		<button id="button3" disabled>Button #3</button>
+	</body>
+</html>`,``,``,`while true:
+	awaitClickBeep('#button1')
+	awaitClickBeep('#button2')
+	awaitClickBeep('#button3')
+	displayNewMessage('Well Done!')`
+	],
+	//=============================
 	calljs: ['text',
 		`<!DOCTYPE html>
 <html>
