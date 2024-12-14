@@ -33,6 +33,9 @@ window.onload = async function() {
 	const tab_elts = document.querySelectorAll('#tabs > span')
 	const tab_items = document.querySelectorAll('#scene > div')
 
+	const defaultExample = new URLSearchParams(document.location.search).get('example')
+	$('example').value = defaultExample || 'empty'
+
 	function reset_tabs() {
 		for (const tab_elt of tab_elts) {
 			tab_elt.removeAttribute('clicked')
