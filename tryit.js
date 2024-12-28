@@ -8,6 +8,18 @@ const javascriptElt = document.querySelector('#item_javascript > textarea')
 const funcsugElt = document.querySelector('#item_funcsug > textarea')
 const iframe = document.querySelector('#item_result > iframe')
 
+for (textAreaElt of [htmlElt, cssElt, javascriptElt, funcsugElt]) {
+	textAreaElt.addEventListener('keydown', function(evt) {
+		if (evt.key == 'Tab') {
+			evt.preventDefault()
+			const start = this.selectionStart
+			const end = this.selectionEnd
+			this.value = this.value.substring(0, start) + '\t' + this.value.substring(end)
+			this.selectionStart = this.selectionEnd = start + 1
+		}
+	})
+}
+
 async function loadFile(ps_url, pElt_textarea, pb_trim) {
 	const content = (ps_url === '') ? '' : await (await fetch(ps_url)).text()
 	if (pb_trim) {
