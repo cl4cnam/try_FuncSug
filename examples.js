@@ -105,6 +105,59 @@ while triedNumber != numberToGuess:
 	displayNewMessage('Well Done!')`
 	],
 	//=============================
+	simpleChoice: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage('<button id="A">I choose A</button> <button id="B">I choose B</button>')
+
+parallel(select 1) ||
+||=================
+	awaitClickBeep('#A')
+...---
+	displayNewMessage("You've chosen A")
+||================
+	awaitClickBeep('#B')
+...---
+	displayNewMessage("You've chosen B")`
+	],
+	//=============================
+	lessSimpleChoice: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage(\`
+	<button id="A">I choose A</button>
+	<button id="B">I choose B</button>
+\`)
+
+parallel(select 1) ||
+||=================
+	awaitClickBeep('#A')
+	displayNewMessage('<button id="Aconfirmed">Yes, I choose A</button>')
+	awaitClickBeep('#Aconfirmed')
+...---
+	displayNewMessage("You've chosen A")
+||================
+	awaitClickBeep('#B')
+...---
+	displayNewMessage("You've chosen B")
+||================
+	waitSeconds(5)
+...---
+	displayNewMessage("You've hesitated")`
+	],
+	//=============================
 	calljs: ['text',
 		`<!DOCTYPE html>
 <html>
