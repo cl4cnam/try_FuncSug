@@ -158,6 +158,25 @@ parallel(select 1) ||
 	displayNewMessage("You've hesitated")`
 	],
 	//=============================
+	drinkingCow: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage("What does a cow drink?")
+
+parallel exitAfter 1 finished ||
+	var response := awaitHumanText()
+	displayNewMessage(response + " ... Oh, I didn't know that!")
+||
+	waitSeconds(5)
+	displayNewMessage("Water")`
+	],
+	//=============================
 	calljs: ['text',
 		`<!DOCTYPE html>
 <html>
