@@ -56,6 +56,7 @@ button:hover {
 
 #scene {
 	flex-grow: 1;
+	min-height: 10em;
 	display: flex;
 }
 
