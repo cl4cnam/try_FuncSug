@@ -23,6 +23,87 @@ examples = {
 </html>`,``,``,`displayNewMessage('Hello, World!')`
 	],
 	//=============================
+	helloWorldAndOthersSeq1: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage('Hello, World!')
+displayNewMessage("Hello to the others!")
+displayNewMessage("--- THE END ---")`
+	],
+	//=============================
+	helloWorldAndOthersSeq2: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`# Function definition
+#---------------
+def showNewMessage5Seconds(p_message):
+	parallel exitWith branch 1 ||
+		waitSeconds(5)
+	||
+		showNewElementIn(p_message, 'body', 'p', true, 'forever')
+
+# Main program
+#-------------
+showNewMessage5Seconds("Hello, World!")
+showNewMessage5Seconds("Hello to the others!")
+displayNewMessage("--- THE END ---")`
+	],
+	//=============================
+	helloWorldAndOthersPar1: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`# No noticeable differences with the sequential version. Can we call "displayNewMessage" an asynchronous-effect function?
+parallel ||
+	displayNewMessage("Hello, World!")
+||
+	displayNewMessage("Hello to the others!")
+displayNewMessage("--- THE END ---")`
+	],
+	//=============================
+	helloWorldAndOthersPar2: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`# Function definition
+#---------------
+def showNewMessage5Seconds(p_message):
+	parallel exitWith branch 1 ||
+		waitSeconds(5)
+	||
+		showNewElementIn(p_message, 'body', 'p', true, 'forever')
+
+# Main program
+#-------------
+parallel ||
+	showNewMessage5Seconds("Hello, World!")
+||
+	showNewMessage5Seconds("Hello to the others!")
+displayNewMessage("--- THE END ---")`
+	],
+	//=============================
 	helloYou: ['text',
 		`<!DOCTYPE html>
 <html>
