@@ -265,12 +265,11 @@ while not isNovalue(allRemainingCards):
 	#            <instructions1>
 	#        do:
 	#            <instructions2>
-	# launch, in parallel, a sequence of "<instructions1> then <instructions2>" for each value of <variable2>
+	# launches, in parallel, a sequence of "<instructions1> then <instructions2>" for each value of <variable2>
 	#     and when <number> branches (called "selected branches") have reached the end of <instructions1>, all others branches are definitively interrupted
-	# When all the "selected branches" are finished, the "parallel" block finishes and returns a concatenation of the returns of all the "selected branches"
+	# When all the "selected branches" are finished, the "parallel" block finishes and returns a "concatenation" of the returns of all the "selected branches"
 	
 	var allClickedCards := parallel(for anyCard in allRemainingCards, select numberOfCopy):
-		# In the following code, anyCard is only a single card
 		select:
 			awaitClickBeep(anyCard.cardElement)
 		do:
