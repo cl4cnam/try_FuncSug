@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet href="../style/svgStyle.css" type="text/css"?><!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   class="ciel"
+   width="145"
+   height="215"
+   id="svg5048"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="dosCarte.svg">
+  <title
+     id="title7548">DosCartes</title>
+  <defs
+     id="defs5050">
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#monMotif1"
+       id="pattern3511"
+       patternTransform="translate(101.79146,-89.575337)" />
+    <pattern
+       patternUnits="userSpaceOnUse"
+       width="66.401571"
+       height="66.401571"
+       patternTransform="translate(-242.02843,-95.455391)"
+       id="monMotif1">
+      <g
+         style="fill:#afe9dd"
+         transform="translate(0,-0.03543307)"
+         id="g5766">
+        <path
+           inkscape:connector-curvature="0"
+           style="fill:#afe9dd;fill-opacity:1;fill-rule:evenodd;stroke:none"
+           d="M 65.055114,66.437004 64.807083,20.940944 0,65.090547 45.49606,64.842516 1.3464566,0.03543307 1.5944881,45.49606 66.401571,1.3818897 20.940944,1.6299212 z"
+           id="path5768" />
+      </g>
+    </pattern>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.92778547"
+     inkscape:cx="206.109"
+     inkscape:cy="63.235986"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer4"
+     showgrid="false"
+     width="1024px"
+     inkscape:window-width="1600"
+     inkscape:window-height="825"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid5546"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true"
+       spacingx="20px"
+       spacingy="20px"
+       originx="-343.81989px"
+       originy="-523.21443px" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5053">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>jeu_memory</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>V.B.GORDOLON</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>V.B.GORDOLON</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>prefasite</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:date>2012-02-19</dc:date>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="dosCarte"
+     style="display:inline"
+     transform="translate(-343.81989,-5.8800536)">
+    <g
+       id="g3393"
+       transform="translate(343.82948,5.3891736)">
+      <g
+         inkscape:label="#g3400"
+         transform="translate(-34.415835,-299.00912)"
+         id="dosCarte2">
+        <rect
+           style="fill:#87cdde;fill-opacity:1;fill-rule:evenodd;stroke:#413eae;stroke-width:5.55530357;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+           id="rect5796"
+           width="139.4447"
+           height="209.4447"
+           x="37.193497"
+           y="302.27213"
+           rx="8.2156038"
+           ry="8.2042551" />
+        <rect
+           ry="8.2042551"
+           rx="8.2156038"
+           y="302.27213"
+           x="37.193497"
+           height="209.4447"
+           width="139.4447"
+           id="rect5760"
+           style="fill:url(#pattern3511);fill-opacity:1;fill-rule:evenodd;stroke:#413eae;stroke-width:5.55530357;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+      </g>
+    </g>
+  </g>
+</svg>

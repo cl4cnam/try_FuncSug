@@ -177,6 +177,121 @@ parallel exitAfter 1 finished ||
 	displayNewMessage("Water")`
 	],
 	//=============================
+	memory: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<div id="gameTable"></div>
+	</body>
+</html>`,`body {text-align: center}
+table {margin: auto}
+.clicked {
+	outline: dashed blue 3px;
+	filter: opacity(50%);
+}
+img.OK {
+	outline: none;
+	filter: none;
+}
+`,`function makeCardDeck(p_numberOfCopy) {
+	// Each card has a back and a face
+	const cardDeck = []
+	for(let copy=1; copy<=p_numberOfCopy; copy++){
+		for( let cardNum=1; cardNum<=7; cardNum++){
+			cardDeck.push({back : "cardBack.svg", face : "card"+ cardNum +".jpg" });
+		}
+	}
+	return cardDeck
+}
+
+function shuffleCards(p_cardDeck) {
+	// shuffle the deck
+	//~ copied from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+	for (let i = p_cardDeck.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[p_cardDeck[i], p_cardDeck[j]] = [p_cardDeck[j], p_cardDeck[i]];
+	}
+}
+
+function distributeCards(p_cardDeck) {
+	// place all the cards face downward onto the game table
+		const gameTable = document.getElementById("gameTable");
+		for(let card of p_cardDeck){
+			const cardElement = document.createElement('img');
+			cardElement.src= "img/" + card.back
+			card.cardElement = cardElement
+			gameTable.appendChild(cardElement)
+		}
+}
+
+function showFace(p_card) {
+	p_card.cardElement.src = "img/" + p_card.face
+}
+
+function showBack(p_card) {
+	p_card.cardElement.src = "img/" + p_card.back
+}`,`# Prepare game table
+#=======================
+
+var numberOfCopy := 3
+
+var cardDeck := calljs makeCardDeck(numberOfCopy)
+
+# shuffle deck
+calljs shuffleCards(cardDeck)
+
+# place cards face downward onto the game table
+calljs distributeCards(cardDeck)
+
+# Start of game
+#=======================
+
+# transform JavaScript Array into FuncSug "parallel list"
+var allRemainingCards := listToPar(cardDeck)
+# now, allRemainingCards is a "parallel list" of all cards placed on the table
+
+while not isNovalue(allRemainingCards):
+	
+	# choose numberOfCopy cards
+	#--------------------------
+	
+	# This block:
+	#    parallel(for <variable1> in <variable2>, select <number>):
+	#        select:
+	#            <instructions1>
+	#        do:
+	#            <instructions2>
+	# launch, in parallel, a sequence of "<instructions1> then <instructions2>" for each value of <variable2>
+	#     and when <number> branches (called "selected branches") have reached the end of <instructions1>, all others branches are definitively interrupted
+	# When all the "selected branches" are finished, the "parallel" block finishes and returns a concatenation of the returns of all the "selected branches"
+	
+	var allClickedCards := parallel(for anyCard in allRemainingCards, select numberOfCopy):
+		# In the following code, anyCard is only a single card
+		select:
+			awaitClickBeep(anyCard.cardElement)
+		do:
+			calljs showFace(anyCard)
+			# return the clicked card (which is then "concatenated" to allClickedCards by "allClickedCards := parallel()...")
+			anyCard
+
+	# Compare visible faces
+	#----------------------
+	if allEqual(allClickedCards.face):
+		js (allClickedCards):
+			allClickedCards.cardElement.classList.add('OK')
+		allRemainingCards := valuesFrom(allRemainingCards, 'butNotFrom', allClickedCards)
+	else:
+		waitSeconds(1)
+		calljs showBack(allClickedCards)
+
+displayNewMessage('Congratulations, you have found all identical cards!')
+`
+	],
+	//=============================
 	calljs: ['text',
 		`<!DOCTYPE html>
 <html>
