@@ -197,7 +197,10 @@ img.OK {
 	outline: none;
 	filter: none;
 }
-`,`function makeCardDeck(p_numberOfCopy) {
+`,`// Available images in this test environment:
+// img/cardBack.svg, img/card1.jpg, ..., img/card7.jpg
+
+function makeCardDeck(p_numberOfCopy) {
 	// Each card has a back and a face
 	const cardDeck = []
 	for(let copy=1; copy<=p_numberOfCopy; copy++){
