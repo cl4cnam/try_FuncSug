@@ -158,6 +158,75 @@ parallel(select 1) ||
 	displayNewMessage("You've hesitated")`
 	],
 	//=============================
+	hand: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<p id="question"></p>
+		<button id="sockButton" disabled>Socks</button>
+		<button id="gloveButton" disabled>Gloves</button>
+		<p id="response"></p>
+		<p id="end"></p>
+	</body>
+</html>`,``,``,`# This seems to work only because the executions of 'displayNewMessage("Oh, yes..."/"Yes...")' don't last long
+
+# 1) Display the question
+#------------------------
+displayMessageIn('What is put on hands?', '#question')
+
+# 2) Handle the response
+#-----------------------
+parallel exitAfter 1 finished ||
+	awaitClickBeep('#sockButton')
+	displayMessageIn("Oh, yes, as a base for puppets!", '#response')
+||
+	awaitClickBeep('#gloveButton')
+	displayMessageIn("Yes, when it's cold.", '#response')
+
+# 3) Announce the end
+#--------------------
+displayMessageIn('--- THE END ---', '#end')`
+	],
+	//=============================
+	handBetter: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<p id="question"></p>
+		<button id="sockButton" disabled>Socks</button>
+		<button id="gloveButton" disabled>Gloves</button>
+		<p id="response"></p>
+		<p id="end"></p>
+	</body>
+</html>`,``,``,`# 1) Display the question
+#------------------------
+displayMessageIn('What is put on hands?', '#question')
+
+# 2) Handle the response
+#-----------------------
+parallel(select 1) ||
+||===============================
+	awaitClickBeep('#sockButton')
+...---
+	displayMessageIn("Oh, yes, as a base for puppets!", '#response')
+||================================
+	awaitClickBeep('#gloveButton')
+...---
+	displayMessageIn("Yes, when it's cold.", '#response')
+
+# 3) Announce the end
+#--------------------
+displayMessageIn('--- THE END ---', '#end')`
+	],
+	//=============================
 	drinkingCow: ['text',
 		`<!DOCTYPE html>
 <html>
@@ -167,7 +236,9 @@ parallel(select 1) ||
 
 	<body>
 	</body>
-</html>`,``,``,`displayNewMessage("What does a cow drink?")
+</html>`,``,``,`# This seems to work only because the executions of 'displayNewMessage(resp.../"Water")' don't last long
+
+displayNewMessage("What does a cow drink?")
 
 parallel exitAfter 1 finished ||
 	var response := awaitHumanText()
@@ -186,7 +257,7 @@ parallel exitAfter 1 finished ||
 
 	<body>
 	</body>
-</html>`,`.self.display {text-decoration-line: line-through;}`,``,`displayNewMessage("What does a cow drink?")
+</html>`,`.canceled {text-decoration-line: line-through;}`,``,`displayNewMessage("What does a cow drink?")
 
 parallel(select 1) ||
 ||==================================
