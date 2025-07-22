@@ -177,6 +177,28 @@ parallel exitAfter 1 finished ||
 	displayNewMessage("Water")`
 	],
 	//=============================
+	drinkingCowBetter: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,`.self.display {text-decoration-line: line-through;}`,``,`displayNewMessage("What does a cow drink?")
+
+parallel(select 1) ||
+||==================================
+	var response := awaitHumanText()
+...-----
+	displayNewMessage(response + " ... Oh, I didn't know that!")
+||=====================
+	waitSeconds(5)
+...-----
+	displayNewMessage("Water")`
+	],
+	//=============================
 	memory: ['text',
 		`<!DOCTYPE html>
 <html>
