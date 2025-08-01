@@ -270,6 +270,94 @@ parallel(select 1) ||
 	displayNewMessage("Water")`
 	],
 	//=============================
+	ticTacToe: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<div id="gameTable">
+			<div id="1_1"></div>
+			<div id="1_2"></div>
+			<div id="1_3"></div>
+			<div id="2_1"></div>
+			<div id="2_2"></div>
+			<div id="2_3"></div>
+			<div id="3_1"></div>
+			<div id="3_2"></div>
+			<div id="3_3"></div>
+		</div>
+		<p id="message"></p>
+	</body>
+</html>`,`#gameTable {
+	display: inline-grid;
+	grid-template-columns: 165px 165px 165px;
+	row-gap: 20px;
+}
+
+div > div {
+	width: 145px;
+	height: 215px;
+	background-color: #cff;
+}
+
+#message {
+	display: inline-grid;
+	padding: 10px;
+	font-size: 30px;
+	background-color: #cfc;
+	border-radius: 10px;
+}
+`,`function imageOf(player) {
+	return {Flower: 'img/card5.jpg', Mushroom: 'img/card2.jpg'}[player]
+}
+
+function otherPlayer(player) {
+	return {Flower: 'Mushroom', Mushroom: 'Flower'}[player]
+}
+
+function allEquals(array) {
+	return array.every(e=>(array[0] !== undefined && e === array[0]))
+}
+
+function checkWin(board) {
+	const combinationsList = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
+	for (const combination of combinationsList) {
+		const playerCombination = combination.map(i=>board[i].player)
+		if (allEquals(playerCombination)) return playerCombination[0]
+	}
+	return false
+}`,`var player := 'Flower'
+displayMessageIn('Flower is up', '#message')
+
+var cardList := js ():
+	return document.querySelectorAll('#gameTable > div')
+var remainingCards := listToPar(cardList)
+
+var winner
+while not isNovalue(remainingCards):
+	parallel(for card in remainingCards, select 1):
+		select:
+			awaitClickBeep(card)
+		do:
+			displayMessageIn('<img src="' + (calljs imageOf(player)) + '">', card)
+			card.player := player
+			remainingCards := valuesFrom(remainingCards, 'butNotFrom', card)
+	winner := calljs checkWin(cardList)
+	if winner:
+		remainingCards := | |
+	else:
+		player := calljs otherPlayer(player)
+		displayMessageIn(player + ' is up', '#message')
+
+if winner:
+	displayMessageIn(winner + ' wins', '#message')
+else:
+	displayMessageIn('Draw', '#message')`
+	],
+	//=============================
 	memory: ['text',
 		`<!DOCTYPE html>
 <html>
