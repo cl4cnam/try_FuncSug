@@ -297,7 +297,7 @@ parallel(select 1) ||
 	row-gap: 20px;
 }
 
-div > div {
+#gameTable > div {
 	width: 145px;
 	height: 215px;
 	background-color: #cff;
