@@ -475,6 +475,162 @@ displayNewMessage('Congratulations, you have found all identical cards!')
 `
 	],
 	//=============================
+	counter: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<span id="count">0</span>
+		<button id="increment">Count</button>
+	</body>
+</html>`,``,``,`while true:
+	awaitClickBeep('#increment')
+	displayMessageIn(   1*getText('#count') + 1,   '#count'   )`
+	],
+	//=============================
+	counterReact: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<span id="count">0</span>
+		<button id="increment">Count</button>
+	</body>
+</html>`,``,``,`parallel:
+	var count := 0
+	while true:
+		awaitClickBeep('#increment')
+		count += 1
+	while true:
+		awaitBeep count
+		displayMessageIn(count, '#count')`
+	],
+	//=============================
+	counterPlusMinus: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<button id="decrement">Decrement</button>
+		<span id="count">0</span>
+		<button id="increment">Increment</button>
+	</body>
+</html>`,``,``,`parallel:
+	var count := 0
+	while true:
+		awaitClickBeep('#decrement')
+		count -= 1
+	while true:
+		awaitClickBeep('#increment')
+		count += 1
+	while true:
+		awaitBeep count
+		displayMessageIn(count, '#count')`
+	],
+	//=============================
+	temperatureConverterSimple: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<input type="text" id="celsius">
+		<span id="count">Celsius = </span>
+		<input type="text" id="fahrenheit">
+		<span id="count">Fahrenheit</span>
+	</body>
+</html>`,``,``,`def round(p_number, p_precision):
+	js (p_number, p_precision):
+		return Number.parseFloat(p_number).toFixed(p_precision)
+
+var celsiusInput := getElement('#celsius')
+var fahrenheitInput := getElement('#fahrenheit')
+
+parallel:
+	while true:
+		parallel(select 1) ||
+		||================
+			awaitDomeventBeep('input', celsiusInput)
+		...--------------
+			fahrenheitInput.value := round(celsiusInput.value*9/5 + 32, 2)
+		||================
+			awaitDomeventBeep('input', fahrenheitInput)
+		...-------------
+			celsiusInput.value := round((fahrenheitInput.value-32)*5/9, 2)`
+	],
+	//=============================
+	temperatureConverter: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<input type="text" id="celsius">
+		<span id="count">Celsius = </span>
+		<input type="text" id="fahrenheit">
+		<span id="count">Fahrenheit</span>
+	</body>
+</html>`,`body.notSync input {
+	background-color: gray;
+}
+
+input.invalid.invalid {
+	background-color: red;
+}`,``,`def isInputValid(p_element):
+	js (p_element):
+		return !isNaN(p_element.value)
+
+def round(p_number, p_precision):
+	js (p_number, p_precision):
+		return Number.parseFloat(p_number).toFixed(p_precision)
+
+var celsiusInput := getElement('#celsius')
+var fahrenheitInput := getElement('#fahrenheit')
+
+var temperatureSynchronization
+
+parallel:
+	while true:
+		parallel(select 1) ||
+		||================
+			awaitDomeventBeep('input', celsiusInput)
+		...--------------
+			temperatureSynchronization := isInputValid(celsiusInput)
+			if temperatureSynchronization:
+				fahrenheitInput.value := round(celsiusInput.value*9/5 + 32, 2)
+			else:
+				addCssClassTo('invalid', celsiusInput)
+		||================
+			awaitDomeventBeep('input', fahrenheitInput)
+		...-------------
+			temperatureSynchronization := isInputValid(fahrenheitInput)
+			if temperatureSynchronization:
+				celsiusInput.value := round((fahrenheitInput.value-32)*5/9, 2)
+			else:
+				addCssClassTo('invalid', fahrenheitInput)
+	while true:
+		awaitBeep temperatureSynchronization
+		if temperatureSynchronization:
+			DelCssClassFrom('notSync', 'body')
+			DelCssClassFrom('invalid', celsiusInput)
+			DelCssClassFrom('invalid', fahrenheitInput)
+		else:
+			addCssClassTo('notSync', 'body')`
+	],
+	//=============================
 	calljs: ['text',
 		`<!DOCTYPE html>
 <html>
