@@ -358,6 +358,117 @@ else:
 	displayMessageIn('Draw', '#message')`
 	],
 	//=============================
+	puzzle15: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<div id="gameTable">
+		</div>
+	</body>
+</html>`,`#gameTable {
+	display: inline-grid;
+	row-gap: 10px;
+}
+
+#gameTable > button {
+	width: 50px;
+	height: 50px;
+}
+
+#gameTable > button:empty {
+	visibility: hidden;
+}
+`,`const $ = document.getElementById.bind(document)
+
+// Parameters
+//------------
+const width = 4
+const height = 4
+const size = width*height-1
+
+// Make cards
+//------------
+const gameTable = $('gameTable')
+gameTable.style.gridTemplateColumns = 'repeat(' + width + ', 60px)'
+for (let i=0; i<size; i++) {
+	gameTable.innerHTML += '<button id="' + i + '" disabled>' + (i+1) + '</button>'
+}
+gameTable.innerHTML += '<button id="' + size + '" disabled></button>'
+const buttonList = document.querySelectorAll('#gameTable > button')
+const emptyButton = $(''+size)
+
+// Utils functions
+//-----------------
+function idToXy(id) {
+	return [id%width, Math.floor(id/width)]
+}
+
+function xyToId(x,y) {
+	return '' + (width*y + x)
+}
+
+function getAdjacentButtons(button) {
+	const [x,y] = idToXy(button.id)
+	const inTheXFrame = n=>(0<=n && n <width)
+	const inTheYFrame = n=>(0<=n && n <height)
+	const coordToButton = coord => $(xyToId(coord[0],coord[1]))
+	const horizAdj = [x-1,x+1].filter(inTheXFrame).map(e=>[e,y])
+	const verticAdj = [y-1,y+1].filter(inTheYFrame).map(e=>[x,e])
+	return [...horizAdj, ...verticAdj].map( coordToButton )
+}
+
+function exchange(button, empty) {
+	empty.innerHTML = button.innerHTML
+	button.innerHTML = ''
+}
+
+function randomChoose(array) {
+	const index = Math.floor(Math.random()*array.length)
+	return array[index]
+}
+
+function isOrdered(buttonList) {
+	const isAtRightPlace = button=>(button.innerHTML=='' || button.innerHTML==(1*button.id+1))
+	return Array.from(buttonList).every(isAtRightPlace)
+}`,`#---------------
+# Prepare game
+#---------------
+# 'import' imports from JavaScript code
+var buttonList := import('buttonList')
+var emptyButton := import('emptyButton')
+
+#---------------
+# Shuffle cards
+#---------------
+repeat 100:
+	var adj := calljs getAdjacentButtons(emptyButton)
+	var button := calljs randomChoose(adj)
+	waitSeconds(0)
+	calljs exchange(button, emptyButton)
+	emptyButton := button
+
+#---------------
+# Play
+#---------------
+while not (calljs isOrdered(buttonList)):
+	var adj := listToPar(calljs getAdjacentButtons(emptyButton))
+	parallel(for button in adj, select 1):
+		select:
+			awaitClickBeep(button)
+		do:
+			calljs exchange(button, emptyButton)
+			emptyButton := button
+
+#----------
+# Success
+#----------
+displayNewMessage('Congratulations! You succeeded!')`
+	],
+	//=============================
 	memory: ['text',
 		`<!DOCTYPE html>
 <html>
