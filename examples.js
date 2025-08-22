@@ -270,6 +270,37 @@ parallel(select 1) ||
 	displayNewMessage("Water")`
 	],
 	//=============================
+	chaseButton: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,`#gameTable {
+	display: flex;
+	flex-flow: row wrap;
+	button {
+		padding: 10px;
+		margin: 10px;
+	}
+}`,`function makeButtons(howMany) {
+	return '<button disabled> </button>'.repeat(howMany)
+}`,`var numberOfButtons := 200
+
+displayNewMessage('Chase the button!')
+displayNewHtmlIn('<div id="gameTable"></div>', 'body')
+displayNewHtmlIn(calljs makeButtons(numberOfButtons), '#gameTable')
+
+while true:
+	var buttonNum := randomIntBetween(1, numberOfButtons)
+	awaitClickBeep('#gameTable > button:nth-of-type(' + buttonNum + ')')
+
+# Try to make this program in JavaScript/DOM or your favorite programming language!`
+	],
+	//=============================
 	ticTacToe: ['text',
 		`<!DOCTYPE html>
 <html>
