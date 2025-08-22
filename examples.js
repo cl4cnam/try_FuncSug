@@ -301,6 +301,62 @@ while true:
 # Try to make this program in JavaScript/DOM or your favorite programming language!`
 	],
 	//=============================
+	find3Button: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,`#gameTable {
+	display: flex;
+	flex-flow: row wrap;
+	button {
+		padding: 10px;
+		margin: 10px;
+	}
+}
+
+.popup {
+	position: fixed; top: 30%; left: 50%; display: inline-table; z-index: 100; margin-left: -25%;
+	background-color: #ffc; border-color: #cc8;
+}
+
+#gameTable:not(:last-child) {
+	background-color: #eee;
+	& > button {
+		visibility: hidden;
+	}
+}`,`function makeButtons(howMany) {
+	return '<button disabled> </button>'.repeat(howMany)
+}
+
+function threeRandomNumber(max) {
+	const result = []
+	for (let i=0; i<3; i++) {
+		while (!result[i]) {
+			const rand = Math.floor( (max)*Math.random()+1 )
+			if (!result.includes(rand)) result.push(rand)
+		}
+	}
+	return result
+}`,`var numberOfButtons := 200
+
+displayNewMessage('Find the three buttons!')
+displayNewHtmlIn('<div id="gameTable"></div>', 'body')
+displayNewHtmlIn(calljs makeButtons(numberOfButtons), '#gameTable')
+
+while true:
+	var buttonNum := listToPar(calljs threeRandomNumber(numberOfButtons))
+	parallel forEachValueOf buttonNum:
+		awaitClickBeep('#gameTable > button:nth-of-type(' + buttonNum + ')')
+	showNewElementIn('Congratulations!', 'body', 'p/popup', false, 'untilClick')
+
+# Try to make this program in JavaScript/DOM or your favorite programming language!`
+	],
+	//=============================
 	ticTacToe: ['text',
 		`<!DOCTYPE html>
 <html>
