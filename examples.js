@@ -798,23 +798,19 @@ var temperatureSynchronization
 
 parallel:
 	while true:
-		parallel(select 1) ||
-		||================
-			awaitDomeventBeep('input', celsiusInput)
-		...--------------
-			temperatureSynchronization := isInputValid(celsiusInput)
-			if temperatureSynchronization:
-				fahrenheitInput.value := round(celsiusInput.value*9/5 + 32, 2)
-			else:
-				addCssClassTo('invalid', celsiusInput)
-		||================
-			awaitDomeventBeep('input', fahrenheitInput)
-		...-------------
-			temperatureSynchronization := isInputValid(fahrenheitInput)
-			if temperatureSynchronization:
-				celsiusInput.value := round((fahrenheitInput.value-32)*5/9, 2)
-			else:
-				addCssClassTo('invalid', fahrenheitInput)
+		awaitDomeventBeep('input', celsiusInput)
+		temperatureSynchronization := isInputValid(celsiusInput)
+		if temperatureSynchronization:
+			fahrenheitInput.value := round(celsiusInput.value*9/5 + 32, 2)
+		else:
+			addCssClassTo('invalid', celsiusInput)
+	while true:
+		awaitDomeventBeep('input', fahrenheitInput)
+		temperatureSynchronization := isInputValid(fahrenheitInput)
+		if temperatureSynchronization:
+			celsiusInput.value := round((fahrenheitInput.value-32)*5/9, 2)
+		else:
+			addCssClassTo('invalid', fahrenheitInput)
 	while true:
 		awaitBeep temperatureSynchronization
 		if temperatureSynchronization:
