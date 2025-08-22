@@ -748,24 +748,20 @@ displayNewMessage('Congratulations, you have found all identical cards!')
 		<input type="text" id="fahrenheit">
 		<span id="count">Fahrenheit</span>
 	</body>
-</html>`,``,``,`def round(p_number, p_precision):
-	js (p_number, p_precision):
-		return Number.parseFloat(p_number).toFixed(p_precision)
+</html>`,``,``,`def round(p_number):
+	js (p_number):
+		return Number.parseFloat(p_number).toFixed(2)
 
 var celsiusInput := getElement('#celsius')
 var fahrenheitInput := getElement('#fahrenheit')
 
 parallel:
 	while true:
-		parallel(select 1) ||
-		||================
-			awaitDomeventBeep('input', celsiusInput)
-		...--------------
-			fahrenheitInput.value := round(celsiusInput.value*9/5 + 32, 2)
-		||================
-			awaitDomeventBeep('input', fahrenheitInput)
-		...-------------
-			celsiusInput.value := round((fahrenheitInput.value-32)*5/9, 2)`
+		awaitDomeventBeep('input', celsiusInput)
+		fahrenheitInput.value := round(celsiusInput.value*9/5 + 32)
+	while true:
+		awaitDomeventBeep('input', fahrenheitInput)
+		celsiusInput.value := round((fahrenheitInput.value-32)*5/9)`
 	],
 	//=============================
 	temperatureConverter: ['text',
