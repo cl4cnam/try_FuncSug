@@ -357,6 +357,51 @@ while true:
 # Try to make this program in JavaScript/DOM or your favorite programming language!`
 	],
 	//=============================
+	coloringBook: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,`#palette {
+	position: fixed; top: 0; left: 0; display: inline-table; z-index: 100;
+}
+`,`const ALL_COLORS = ['purple', 'magenta', 'red', 'orange', 'yellow', 'lime', 'green', 'cyan', 'blue', 'brown', 'white', 'silver', 'black']
+
+function setCursorColor(color) {
+	const cursor = \`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath fill='%23fed' stroke='black' d='m 0,0 20,0 12,12 0,20 -20,0 -12,-12 z'/%3E%3Ccircle fill='\` + color + \`' stroke='black' cx='0' cy='0' r='20'/%3E%3Cpath stroke='black' fill='none' d='m 20,0 -20,0 0,20' /%3E%3C/svg%3E") 0 0, pointer\`
+	document.body.style.cursor = cursor
+}
+
+function getDot(color, position) {
+	return \`<circle cx="\${position*25+20}" cy="20" r="10" fill="\${color}" stroke="black">\${color}</circle>\`
+}
+
+function getRowOfDots() {
+	return '<svg id="palette" width="' + ALL_COLORS.length*30 + '" height="40">' + ALL_COLORS.map((e,i)=>getDot(e, i)).join('') + '</svg>'
+}
+`,`displayNewHtmlIn(calljs getRowOfDots(), 'body')
+var svgText := awaitFileContent('img/coloringDog.svg', 'text')
+displayNewHtmlIn(svgText, 'body')
+var color := 'white'
+calljs setCursorColor(color)
+
+parallel:
+	while true:
+		var paletteEvt := awaitDomeventBeep('mousedown', '#palette')
+		var palettePart := paletteEvt.target
+		color := palettePart.innerHTML
+		calljs setCursorColor(color)
+	while true:
+		var drawingEvt := awaitDomeventBeep('mousedown', '#drawing')
+		var drawingPart := drawingEvt.target
+		drawingPart.style.fill := color
+`
+	],
+	//=============================
 	ticTacToe: ['text',
 		`<!DOCTYPE html>
 <html>
