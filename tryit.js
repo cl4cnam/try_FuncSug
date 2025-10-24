@@ -83,16 +83,16 @@ window.onload = async function() {
 }
 
 function adaptHtml(ps_htmlText, ps_cssText, ps_javascriptText, ps_funcsugText) {
-	return ps_htmlText.replace('</head>', `		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/lib.css">
+	return ps_htmlText.replace('</head>', `		<link rel="stylesheet" href="FuncSug/lib.css">
 		<link rel="stylesheet" href="data:text/css;charset=utf-8,` + escape(ps_cssText) + `">
-	</head>`).replace('</body>',`		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/libStd.fg" type="application/funcsug"></script>
-		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/libDOM.fg" type="application/funcsug"></script>
+	</head>`).replace('</body>',`		<script src="FuncSug/libStd.fg" type="application/funcsug"></script>
+		<script src="FuncSug/libDOM.fg" type="application/funcsug"></script>
 		<script src="data:text/plain;charset=utf-8,` + encodeURIComponent(ps_funcsugText) + `" type="application/funcsug"></script>
 		<script src="data:application/javascript;charset=utf-8,` + encodeURIComponent(ps_javascriptText) + `"></script>
-		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/parser.js"></script>
-		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/parserPy.js"></script>
-		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/interpreter.js"></script>
-		<script src="https://cdn.jsdelivr.net/gh/cl4cnam/funcSug/DOMloader.js"></script>
+		<script src="FuncSug/parser.js"></script>
+		<script src="FuncSug/parserPy.js"></script>
+		<script src="FuncSug/interpreter.js"></script>
+		<script src="FuncSug/DOMloader.js"></script>
 	</body>`)
 }
 

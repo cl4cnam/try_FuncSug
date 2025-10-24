@@ -1,0 +1,91 @@
+#!syntax:lispish
+
+#====================================
+# Display functions
+#====================================
+
+{deffunc displayNewSVGElementIn (p_svg  p_anchor)
+#        ----------------------
+		.var svgElt
+		{ext (p_svg p_anchor) `
+			const ls_drawing = p_svg
+			const ls_anchor = p_anchor
+			
+			const lArray_drawing = ls_drawing.split(' ')
+			lArray_drawing.splice(1, 0, 'xmlns="http://www.w3.org/2000/svg"')
+			const ls_svgDrawing = lArray_drawing.join(' ')
+			
+			const lElt_anchor = document.querySelector(ls_anchor)
+			if (lElt_anchor===null) console.log("ERROR !!! libDOMSVG.fs/displayNewSVGIn '" + ls_anchor + "' selector references no element!")
+			const parsedElement = new DOMParser().parseFromString(ls_svgDrawing, 'application/xml')
+			const lElt = document.importNode(parsedElement.documentElement, true)
+			lElt_anchor.appendChild(lElt)
+			output(lElt)
+		` svgElt}
+		:await svgElt beep
+}
+
+#====================================
+# Input functions
+#====================================
+
+{deffunc whileTrue_dragAndDropSvg (p_selectorSVG p_selectorToDrop p_evtGrab p_evtDrag p_evtDrop)
+	.var movement
+	.var wholeTreatment
+	.var sugPointermove
+	.var sugPointerup
+
+	.var svgElement <-- {js (p_selectorSVG) `return document.querySelector(p_selectorSVG)`}
+	.var toDrop <-- {js (p_selectorToDrop) `return document.querySelector(p_selectorToDrop)`}
+	
+	{par @wholeTreatment
+		{whileTrueAwaitDom_translate $svgElement 'pointermove' sugPointermove}
+		{whileTrueAwaitDom_translate $svgElement 'pointerup' sugPointerup}
+		{whileTrue
+			.var evtPointerdown <-- :awaitDomeventBeep 'pointerdown' $p_selectorToDrop
+			.bip $p_evtGrab
+			#~ .print 'down'
+			{js (toDrop evtPointerdown svgElement) `
+				toDrop.setPointerCapture(evtPointerdown.pointerId)
+				toDrop.data_origX = evtPointerdown.pageX
+				toDrop.data_origY = evtPointerdown.pageY
+				
+				const svgCtm = svgElement.getScreenCTM()
+				const parentCtm = toDrop.parentNode.getScreenCTM()
+				let eltMatrix
+				try {
+					eltMatrix = toDrop.transform.baseVal.consolidate().matrix
+				} catch (err) {
+					eltMatrix = svgElement.createSVGMatrix()
+					toDrop.setAttribute('transform', 'translate(0,0)')
+				}
+				svgElement.appendChild(toDrop)
+				toDrop.matrix_orig = svgCtm.inverse().multiply(  parentCtm.multiply(eltMatrix)  )
+				toDrop.transform.baseVal.getItem(0).setMatrix(toDrop.matrix_orig)
+				
+				toDrop.setAttributeNS(null, 'pointer-events', 'none')
+			`}
+			{par @movement
+				{whileTrueAwaitDom2_js $svgElement $toDrop 'pointermove' `
+					p_obj.deltaX = evt.pageX - p_obj.data_origX
+					p_obj.deltaY = evt.pageY - p_obj.data_origY
+					const translateMatrix = p_target.createSVGMatrix().translate(p_obj.deltaX,p_obj.deltaY)
+					const matrix_trans = translateMatrix.multiply(p_obj.matrix_orig)
+					p_obj.transform.baseVal.getItem(0).setMatrix(matrix_trans)
+				`}
+				{seq
+					:await sugPointermove bip
+					#~ .print '------dragging'
+					.bip $p_evtDrag
+					.var evtUp <-- :await sugPointerup bip
+					#~ .print '------dropped'
+					:set $p_evtDrop {js (evtUp) `return evtUp.target`}
+					{js (toDrop) `
+						toDrop.setAttributeNS(null, 'pointer-events', 'all')
+					`}
+					.break movement
+				}
+			}
+		}
+	}
+}

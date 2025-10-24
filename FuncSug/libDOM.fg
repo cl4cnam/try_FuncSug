@@ -1,0 +1,669 @@
+#!syntax:lispish
+
+.var dummy
+.var document <-- .import document
+
+{deffunc getElement (p_selectorOrElement)
+	{short (p_selectorOrElement) `
+		const lElt = (p_selectorOrElement instanceof Element) ? p_selectorOrElement : document.querySelector(p_selectorOrElement)
+		if (lElt===null) console.log("ERROR !!! libDOM.fg/generateUserEvent '" + p_selectorOrElement + "' selector references no element!")
+		return lElt
+	`}
+}
+
+{deffunc getText (p_selectorOrElement)
+	{short (p_selectorOrElement) `
+		const lElt = (p_selectorOrElement instanceof Element) ? p_selectorOrElement : document.querySelector(p_selectorOrElement)
+		if (lElt===null) console.log("ERROR !!! libDOM.fg/generateUserEvent '" + p_selectorOrElement + "' selector references no element!")
+		return lElt.innerText
+	`}
+}
+
+#====================================
+# Click functions
+#====================================
+
+{deffunc getClick (p_idElt p_evtSug)
+#        --------
+	{ext (p_idElt) `
+		const lElt = (p_idElt instanceof Element) ? p_idElt : document.querySelector(p_idElt)
+		if (lElt===null) console.log("ERROR !!! libDOM.fs/getClick '" + p_idElt + "' selector references no element!")
+		lElt.classList.remove('clicked')
+		lElt.disabled = false
+		const l_react = function(evt) {
+			evt.preventDefault()
+			lElt.removeEventListener('click', l_react)
+			lElt.classList.add('clicked')
+			lElt.disabled = true
+			const l_meaning = lElt.getAttribute('data-meaning')
+			if (l_meaning) output(l_meaning)
+			else output(lElt.innerHTML)
+		};
+		lElt.addEventListener('click', l_react)
+		SAVES.push({elt:lElt, react:l_react})
+	` $p_evtSug `
+		SAVE.elt.removeEventListener('click', SAVE.react)
+		SAVE.elt.disabled = true
+	` `
+		SAVE.elt.addEventListener('click', SAVE.react)
+		SAVE.elt.disabled = false
+	`}
+}
+
+{deffunc awaitClickBip (p_idElt)
+#        -------------
+		.var evtSug
+		(&getClick $p_idElt evtSug)
+		:await evtSug bip
+}
+
+{deffunc awaitClickBeep (p_idElt)
+#        --------------
+		.var evtSug
+		(&getClick $p_idElt evtSug)
+		:await evtSug beep
+}
+
+{deffunc getSelectedOption (p_idElt p_evtSug)
+#        --------
+	{ext (p_idElt) `
+		const lElt = (p_idElt instanceof Element) ? p_idElt : document.querySelector(p_idElt)
+		if (lElt===null) console.log("ERROR !!! libDOM.fs/getSelectedOption '" + p_idElt + "' selector references no element!")
+		lElt.classList.remove('selected')
+		lElt.disabled = false
+		const l_react = function(evt) {
+			if (evt.target instanceof HTMLSelectElement) {
+				evt.preventDefault()
+				lElt.removeEventListener('change', l_react)
+				lElt.classList.add('selected')
+				lElt.disabled = true
+				output(evt.target.value)
+			}
+		};
+		lElt.addEventListener('change', l_react)
+		SAVES.push({elt:lElt, react:l_react})
+		if (! lElt.notFirstTime) lElt.dispatchEvent(new Event('change'))
+		lElt.notFirstTime = true
+	` $p_evtSug `
+		SAVE.elt.removeEventListener('change', SAVE.react)
+		SAVE.elt.disabled = true
+	` `
+		SAVE.elt.addEventListener('change', SAVE.react)
+		SAVE.elt.disabled = false
+	`}
+}
+
+{deffunc awaitSelectedOptionBip (p_idElt)
+#        -------------
+		.var evtSug
+		(&getSelectedOption $p_idElt evtSug)
+		:await evtSug bip
+}
+
+{deffunc awaitSelectedOptionBeep (p_idElt)
+#        --------------
+		.var evtSug
+		(&getSelectedOption $p_idElt evtSug)
+		:await evtSug beep
+}
+
+{deffunc awaitNewChoice (p_type p_around p_choice)
+#        --------------
+	.var response
+	.var choicesPar
+	{foreach @choicesPar p_choice
+		.var choiceText
+		{seq
+			choiceText <-- :displayNewMessageIn $p_choice $p_around
+			response <-- .awaitClickBeep $choiceText
+			{js (choiceText) `choiceText.classList.add('chosen')`}
+			.break choicesPar
+		}
+		~{if [$p_type = 'remove']
+			{short (choiceText) `choiceText.parentNode.removeChild(choiceText)`}
+		}
+	}
+	$response
+}
+
+{deffunc awaitChoice (p_choice)
+#        --------------
+	.var response
+	.var choicesPar
+	{if .isString $p_choice
+		p_choice <-- .listToPar {short (p_choice) `return [...document.querySelectorAll(p_choice)]`}
+	}
+	{foreach @choicesPar p_choice
+		.var choiceText
+		{seq
+			response <-- .awaitClickBeep $p_choice
+			.break choicesPar
+		}
+	}
+	$response
+}
+
+#====================================
+# Display functions
+#====================================
+
+{deffunc addCssClassTo (p_class p_selector)
+#        -------------
+	{short (p_class p_selector) `
+		const lElt_anchor = (p_selector instanceof Element) ? p_selector : document.querySelector(p_selector)
+		if (lElt_anchor===null) console.log("ERROR !!! libDOM.fs/addCssClassTo '" + p_selector + "' selector references no element!")
+		lElt_anchor.classList.add(p_class)
+	`}
+}
+
+{deffunc DelCssClassFrom (p_class p_selector)
+#        ---------------
+	{short (p_class p_selector) `
+		const lElt_anchor = (p_selector instanceof Element) ? p_selector : document.querySelector(p_selector)
+		if (lElt_anchor===null) console.log("ERROR !!! libDOM.fs/addCssClassTo '" + p_selector + "' selector references no element!")
+		lElt_anchor.classList.remove(p_class)
+	`}
+}
+
+{deffunc existsCssSelector (p_selector)
+#        -----------------
+	{short (p_selector) `
+		return document.querySelector(p_selector) !== null
+	`}
+}
+
+{deffunc setCssProperty (p_id p_property p_value)
+#        --------------
+	{short (p_id p_property p_value) `
+		const lElt = document.getElementById(p_id)
+		if (lElt===null) console.error("ERROR !!! libDOM.fg/setCssProperty '" + p_id + "' id references no element!")
+		lElt.style[p_property] = p_value
+	`}
+}
+
+{deffunc displayNewElementIn (p_message p_idAnchor p_type p_scroll)
+#        -------------------
+	.var elt
+	{ext (p_message p_idAnchor p_type p_scroll) `
+		let ls_class
+		let lElt_anchor
+		if (p_idAnchor instanceof Element) {
+			ls_class = 'other'
+			lElt_anchor = p_idAnchor
+		} else {
+			const lList_idAnchor = p_idAnchor.split('/')
+			const ls_idAnchor = lList_idAnchor[0]
+			ls_class = (lList_idAnchor.length>1) ? lList_idAnchor[1] : 'other'
+			lElt_anchor = document.querySelector(ls_idAnchor)
+			if (lElt_anchor===null) console.log("ERROR !!! libDOM.fg/displayNewMessageIn '" + ls_idAnchor + "' selector references no element!")
+		}
+		const lElt = document.createElement(p_type)
+		lElt.classList.add('display')
+		lElt.classList.add(ls_class)
+		lElt.innerHTML = p_message
+		lElt_anchor.appendChild(lElt)
+		if (p_scroll) lElt.scrollIntoView()
+		output(lElt)
+	` elt}
+	:await elt beep
+}
+
+{deffunc showNewElementIn (p_message p_idAnchor p_type p_scroll p_duration)
+#        -------------------
+	.var elt
+	{ext (p_message p_idAnchor p_type p_scroll p_duration) `
+		const lElt_anchor = (p_idAnchor instanceof Element)
+						? p_idAnchor
+						: document.querySelector(p_idAnchor) || console.log("ERROR !!! libDOM.fg/showNewElementIn '" + ls_idAnchor + "' selector references no element!")
+		const lList_type = p_type.split('/')
+		const ls_type = lList_type[0]
+		const ls_class = (lList_type.length>1) ? lList_type[1] : 'other'
+		const lElt = document.createElement(ls_type)
+		lElt.classList.add('display')
+		lElt.classList.add(ls_class)
+		lElt.innerHTML = p_message
+		lElt_anchor.appendChild(lElt)
+		if (p_scroll) lElt.scrollIntoView()
+		SAVES.push({elt:lElt})
+		if (p_duration == 'untilClick') {
+			lElt.addEventListener('click', function(evt) {
+				lElt.parentNode.removeChild(lElt)
+				output(true)
+			})
+		} else if (p_duration == 'forever') {
+		} else {
+			console.error("ERROR !!! libDOM.fg/showNewElementIn: p_duration is untilClick or forever!")
+		}
+	` elt `
+		SAVE.elt.parentNode.removeChild(SAVE.elt)
+	`}
+	{if [$p_duration = 'untilClick']
+		:await elt beep
+	else
+		!awaitForever
+	}
+}
+
+{deffunc displayNewMessageIn (p_message p_idAnchor)
+#        -------------------
+	(&displayNewElementIn $p_message $p_idAnchor 'p' true)
+}
+
+{deffunc displayNewHtmlIn (p_html p_idAnchor)
+#        -------------------
+	.var elt
+	{ext (p_html p_idAnchor) `
+		let ls_class
+		let lElt_anchor
+		if (p_idAnchor instanceof Element) {
+			lElt_anchor = p_idAnchor
+		} else {
+			lElt_anchor = document.querySelector(p_idAnchor)
+			if (lElt_anchor===null) console.log("ERROR !!! libDOM.fg/displayNewHtmlIn '" + p_idAnchor + "' selector references no element!")
+		}
+		lElt_anchor.innerHTML += p_html
+		lElt_anchor.scrollIntoView()
+		//~ lElt_anchor.addEventListener('load', function(evt){
+			//~ output(lElt_anchor)
+		//~ })
+		output(lElt_anchor)
+	` elt}
+	:await elt beep
+}
+
+{deffunc displayNewMessage (p_message)
+#        -----------------
+	(&displayNewMessageIn $p_message 'body')
+}
+
+{deffunc displayNewHtml (p_html)
+#        -----------------
+	(&displayNewHtmlIn $p_html 'body')
+}
+
+{deffunc displayMessageIn (p_message p_idAnchor)
+#        ----------------
+	.var elt
+	{ext (p_message p_idAnchor) `
+		const lElt_anchor = (p_idAnchor instanceof Element) ? p_idAnchor : document.querySelector(p_idAnchor)
+		if (lElt_anchor===null) console.log("ERROR !!! libDOM.fs/displayMessageIn '" + p_idAnchor + "' selector references no element!")
+		lElt_anchor.innerHTML = p_message
+		lElt_anchor.scrollIntoView()
+		output(lElt_anchor)
+	` elt}
+	:await elt beep
+}
+
+{deffunc displayNewImageIn (p_imagePath p_idAnchor)
+#        ----------------
+	.var elt
+	{ext (p_imagePath p_idAnchor) `
+		let ls_class
+		let lElt_anchor
+		if (p_idAnchor instanceof Element) {
+			ls_class = 'other'
+			lElt_anchor = p_idAnchor
+		} else {
+			const lList_idAnchor = p_idAnchor.split('/')
+			const ls_idAnchor = lList_idAnchor[0]
+			ls_class = (lList_idAnchor.length>1) ? lList_idAnchor[1] : 'other'
+			lElt_anchor = document.querySelector(ls_idAnchor)
+			if (lElt_anchor===null) console.log("ERROR !!! libDOM.fg/displayNewMessageIn '" + ls_idAnchor + "' selector references no element!")
+		}
+		const lElt = document.createElement('img')
+		lElt.classList.add('display')
+		lElt.classList.add(ls_class)
+		lElt.src = p_imagePath
+		lElt_anchor.appendChild(lElt)
+		lElt.scrollIntoView()
+		output(lElt)
+	` elt}
+	:await elt beep
+}
+
+{deffunc displayImageIn (p_imagePath p_idAnchor)
+#        ----------------
+	.var elt
+	{ext (p_imagePath p_idAnchor) `
+		const lElt_anchor = (p_idAnchor instanceof Element) ? p_idAnchor : document.querySelector(p_idAnchor)
+		if (lElt_anchor===null) console.log("ERROR !!! libDOM.fs/displayImageIn '" + p_idAnchor + "' selector references no element!")
+		lElt_anchor.src = p_imagePath
+		//~ lElt_anchor.innerHTML = p_message
+		lElt_anchor.scrollIntoView()
+		output(lElt_anchor)
+	` elt}
+	:await elt beep
+}
+
+{deffunc removeElt (p_elt)
+#        ----------------
+	{short (p_elt) `
+		const lElt = (p_elt instanceof Element) ? p_elt : document.querySelector(p_elt)
+		if(lElt) lElt?.parentNode?.removeChild?.(lElt)
+	`}
+}
+
+#====================================
+# Input functions
+#====================================
+
+{deffunc getDomevent (p_domevt p_idElt p_evtSug)
+#        --------
+	{ext (p_domevt p_idElt) `
+		const lElt = (p_idElt instanceof Element) ? p_idElt : document.querySelector(p_idElt)
+		if (lElt===null) console.log("ERROR !!! libDOM.fg/getDomevent '" + p_idElt + "' selector references no element!")
+		lElt.disabled = false
+		const l_react = function(evt) {
+			evt.preventDefault()
+			lElt.removeEventListener(p_domevt, l_react)
+			output(evt)
+		};
+		lElt.addEventListener(p_domevt, l_react)
+		SAVES.push({elt:lElt, react:l_react, domevtType:p_domevt})
+	` $p_evtSug `
+		SAVE.elt.removeEventListener(SAVE.domevtType, SAVE.react)
+	`}
+}
+
+{deffunc awaitDomeventBip (p_domevt p_idElt)
+#        -------------
+		.var evtSug
+		(&getDomevent $p_domevt $p_idElt evtSug)
+		:await evtSug bip
+}
+
+{deffunc awaitDomeventBeep (p_domevt p_idElt)
+#        --------------
+		.var evtSug
+		(&getDomevent $p_domevt $p_idElt evtSug)
+		:await evtSug beep
+}
+
+{deffunc listen (p_elt p_evtDOM p_evtSug)
+	{ext (p_elt p_evtDOM p_evtSug) `
+		const l_react = function(evt) {
+			goAssign(p_evtSug, evt)
+		}
+		p_elt.addEventListener(p_evtDOM, l_react)
+		SAVES.push({elt:p_elt, react:l_react, evtDOM:p_evtDOM})
+	` dummy `
+		SAVE.elt.removeEventListener(SAVE.evtDOM, SAVE.react)
+	`}
+}
+
+{deffunc whileTrueAwaitDom_translate (p_elt p_evtDOM p_evtSug)
+	{ext (p_elt p_evtDOM p_evtSug) `
+		const l_react = function(evt) {
+			goAssign(p_evtSug, evt)
+		}
+		p_elt.addEventListener(p_evtDOM, l_react)
+		SAVES.push({elt:p_elt, react:l_react, evtDOM:p_evtDOM})
+	` dummy `
+		SAVE.elt.removeEventListener(SAVE.evtDOM, SAVE.react)
+	`}
+	!awaitForever
+}
+
+{deffunc listener (p_target p_evtDOM p_sToExecute)
+	{ext (p_target p_evtDOM) (+ `
+		const l_react = function(evt) {
+			` $p_sToExecute `
+		}
+		p_target.addEventListener(p_evtDOM, l_react)
+		SAVES.push({elt:p_target, react:l_react, evtDOM:p_evtDOM})
+	`) dummy `
+		SAVE.elt.removeEventListener(SAVE.evtDOM, SAVE.react)
+	`}
+}
+
+{deffunc whileTrueAwaitDom_js (p_target p_evtDOM p_sToExecute)
+	{ext (p_target p_evtDOM) (+ `
+		const l_react = function(evt) {
+			` $p_sToExecute `
+		}
+		p_target.addEventListener(p_evtDOM, l_react)
+		SAVES.push({elt:p_target, react:l_react, evtDOM:p_evtDOM})
+	`) dummy `
+		SAVE.elt.removeEventListener(SAVE.evtDOM, SAVE.react)
+	`}
+	!awaitForever
+}
+
+# p_obj is any object that you want to use in p_sToExecute
+{deffunc whileTrueAwaitDom2_js (p_target p_obj p_evtDOM p_sToExecute)
+	{ext (p_target p_obj p_evtDOM) (+ `
+		const l_react = function(evt) {
+			` $p_sToExecute `
+		}
+		p_target.addEventListener(p_evtDOM, l_react)
+		SAVES.push({elt:p_target, react:l_react, evtDOM:p_evtDOM})
+	`) dummy `
+		SAVE.elt.removeEventListener(SAVE.evtDOM, SAVE.react)
+	`}
+	!awaitForever
+}
+
+{deffunc listenOnce (p_elt p_evtDOM p_evtSug)
+	{ext (p_elt p_evtDOM) `
+		const l_react = function(evt) {
+			p_elt.removeEventListener(p_evtDOM, l_react)
+			output(evt)
+		}
+		p_elt.addEventListener(p_evtDOM, l_react)
+		SAVES.push({elt:p_elt, react:l_react, evtDOM:p_evtDOM})
+	` $p_evtSug `
+		//~ console.log('DELETE')
+		SAVE.elt.removeEventListener(SAVE.evtDOM, SAVE.react)
+	`}
+}
+
+{deffunc awaitDOMevtBip (p_elt p_evtDOM)
+	.var evtSug
+	%listenOnce $p_elt $p_evtDOM evtSug
+	:await evtSug bip
+}
+
+{deffunc awaitDOMevtBeep (p_elt p_evtDOM)
+	.var evtSug
+	%listenOnce $p_elt $p_evtDOM evtSug
+	:await evtSug beep
+}
+
+{deffunc loopAwaitDOMevt (p_elt p_sEvtDOM p_eltB p_sExternalScript)
+	{while true
+		.var evtSug
+		%listenOnce $p_elt $p_sEvtDOM evtSug
+		.var evt <-- :await evtSug beep
+		.var target <-- $p_elt
+		.var elt <-- $p_eltB
+		{short (evt target elt) $p_sExternalScript}
+	}
+}
+
+{deffunc inputNewHumanTextIn (p_evtSugB p_idAnchor)
+#        -------------------
+	{ext (p_idAnchor) `
+		const lElt_anchor = document.querySelector(p_idAnchor)
+		if (lElt_anchor===null) console.log("ERROR !!! libDOM.fs/inputNewHumanTextIn '" + p_idAnchor + "' selector references no element!")
+		const lElt = document.createElement('p')
+		lElt.classList.add('entry')
+		lElt.classList.add('self')
+		lElt.setAttribute('contentEditable', 'true')
+		setTimeout(O=>lElt.focus(), 0)
+		const l_react = function(evt) {
+			if (evt.inputType==="insertParagraph") {
+				lElt.removeEventListener('beforeinput', l_react)
+				lElt.setAttribute('contentEditable', 'false')
+				lElt.classList.replace('entry', 'display')
+				evt.preventDefault()
+				//console.log('OK', evt.target.textContent)
+				output(evt.target.textContent)
+			}
+		}
+		lElt.addEventListener('beforeinput', l_react)
+		lElt_anchor.appendChild(lElt)
+		SAVES.push({elt:lElt, react:l_react})
+	` $p_evtSugB `
+		SAVE.elt.removeEventListener('beforeinput', SAVE.react)
+		SAVE.elt.setAttribute('contentEditable', 'false')
+		SAVE.elt.classList.replace('entry', 'display')
+		SAVE.elt.classList.add('canceled')
+	`}
+}
+
+{deffunc inputNewHumanText (p_evtSugB)
+#        -----------------
+	(&inputNewHumanTextIn $p_evtSugB 'body')
+}
+
+{deffunc awaitNewHumanTextIn (p_idAnchor)
+#        -------------------
+		.var evtSugA
+		(&inputNewHumanTextIn evtSugA $p_idAnchor)
+		:await evtSugA beep
+}
+
+{deffunc awaitNewHumanNumberIn (p_idAnchor)
+#        ---------------------
+		.var tryText <-- 'notANumber'
+		.var whileA
+		{while @whileA true {seq
+			:set tryText (&awaitNewHumanTextIn $p_idAnchor)
+			{if :and .not [$tryText < 0] .not [$tryText >= 0]
+				(&displayNewMessageIn 'This is not a number!' :+ $p_idAnchor '/error')
+			else
+				.break whileA
+			}
+		}}
+		$tryText
+}
+
+{deffunc awaitHumanText ()
+#        --------------
+		.var evtSugA
+		(&inputNewHumanText evtSugA)
+		:await evtSugA beep
+}
+
+#====================================
+# Time functions
+#====================================
+
+{deffunc waitMilliseconds (p_nMilliseconds)
+#        -----------
+		.var waitEnd
+		{ext (p_nMilliseconds) `
+			setTimeout(
+				O=>output(p_nMilliseconds),
+				p_nMilliseconds
+			)
+		` waitEnd}
+		:await waitEnd beep
+}
+
+{deffunc waitSeconds (p_nSeconds)
+#        -----------
+	(&waitMilliseconds :* 1000 $p_nSeconds)
+}
+
+#====================================
+# File functions
+#====================================
+
+{deffunc getFileContent (p_filePath p_type p_evtContent)
+#        -----------
+	{ext (p_filePath p_type) `
+		fetch(p_filePath).then(response=>output(response[p_type]()))
+	` $p_evtContent}
+}
+
+{deffunc awaitFileContent (p_filePath p_type)
+#        -------------
+	.var content
+	%getFileContent $p_filePath $p_type content
+	:await content beep
+}
+
+#====================================
+# Sound functions
+#====================================
+
+{deffunc playSoundFile (p_filePath)
+#        -------------
+	.var soundEnd
+	{ext (p_filePath) `
+		const audioElement = new Audio(p_filePath)
+		audioElement.addEventListener('ended', function(evt){
+			output(1)
+		})
+		audioElement.play()
+		//~ audioElement.load()
+		//~ audioElement.pause()
+		SAVES.push({elt:audioElement})
+	` soundEnd `
+		SAVE.elt.pause()
+	`}
+	:await soundEnd beep
+}
+
+{deffunc playSoundFilePlus (p_filePath p_effect)
+#        -------------
+	.var soundEnd
+	{ext (p_filePath p_effect) `
+		const audioElement = new Audio(p_filePath)
+		
+		const audioContext = new AudioContext()
+		const gainNode = audioContext.createGain()
+		if (p_effect == 'fadeout') gainNode.gain.exponentialRampToValueAtTime(0.1, audioContext.currentTime + 2)
+		const source = audioContext.createMediaElementSource(audioElement)
+		source.connect(gainNode)
+		gainNode.connect(audioContext.destination)
+		
+		audioElement.addEventListener('ended', function(evt){
+			output(1)
+		})
+		audioElement.play()
+		//~ audioElement.load()
+		//~ audioElement.pause()
+		SAVES.push({elt:audioElement})
+	` soundEnd `
+		SAVE.elt.pause()
+	`}
+	:await soundEnd beep
+}
+
+#====================================
+# Test functions
+#====================================
+
+{deffunc generateUserEvent (p_selectorOrElement p_eventName)
+	{short (p_selectorOrElement p_eventName) `
+		const lElt = (p_selectorOrElement instanceof Element) ? p_selectorOrElement : document.querySelector(p_selectorOrElement)
+		if (lElt===null) console.log("ERROR !!! libDOM.fg/generateUserEvent '" + p_selectorOrElement + "' selector references no element!")
+		lElt.dispatchEvent(new Event(p_eventName))
+	`}
+}
+
+{deffunc generateUserEventWithType (p_selectorOrElement p_eventName p_type)
+	{short (p_selectorOrElement p_eventName p_type) `
+		const lElt = (p_selectorOrElement instanceof Element) ? p_selectorOrElement : document.querySelector(p_selectorOrElement)
+		if (lElt===null) console.log("ERROR !!! libDOM.fg/generateUserEvent '" + p_selectorOrElement + "' selector references no element!")
+		const lEvt = new Event(p_eventName)
+		lEvt.inputType = p_type
+		lElt.dispatchEvent(lEvt)
+	`}
+}
+
+{deffunc setEntry (p_selectorOrElement p_value)
+	{short (p_selectorOrElement p_value) `
+		const lElt = (p_selectorOrElement instanceof Element) ? p_selectorOrElement : document.querySelector(p_selectorOrElement)
+		if (lElt===null) console.log("ERROR !!! libDOM.fg/generateUserEvent '" + p_selectorOrElement + "' selector references no element!")
+		//~ lElt.setAttribute('value', p_value)
+		lElt.innerHTML = p_value
+	`}
+}
+
+{deffunc enterEntry (p_selectorOrElement p_value)
+	:setEntry $p_selectorOrElement $p_value
+	%generateUserEventWithType $p_selectorOrElement beforeinput insertParagraph
+}

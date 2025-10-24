@@ -1,0 +1,208 @@
+#!syntax:lispish
+
+{deffunc import (p_externalVariable)
+	{short () :+ 'return ' $p_externalVariable}
+}
+
+{deffunc export (p_val p_extObj p_extVar)
+	{short (p_val p_extObj) (+ 'p_extObj.' $p_extVar '=p_val')}
+}
+
+{deffunc par_race __par
+	.var all
+	{foreach @all __par
+		.var retVal
+		:set retVal $__par
+		:breakReturn all $retVal
+	}
+}
+
+{deffunc par_race2 __par
+	.var all
+	.varmul retValMul
+	{foreach @all __par
+		:set retValMul $__par
+		{if [.multiplicity $retValMul = 2]
+			:breakReturn all $retValMul
+		}
+	}
+}
+
+{deffunc par_race_mult __par
+	.var all
+	.varmul nbBranches
+	.varmul retValMul
+	.var mult
+	{foreach @all __par
+		.var result
+		:set result $__par
+		{if [.get __par_N = 0]
+			mult <-- $result
+		else
+			:set nbBranches 1
+			:set retValMul $result
+			{if [.multiplicity $nbBranches = $mult]
+				:breakReturn all $retValMul
+			}
+		}
+	}
+}
+
+{deffunc par_race_num __par
+	.var all
+	.varmul retValMul
+	.var num
+	{foreach @all __par
+		.var result
+		:set result $__par
+		{if [.get __par_N = 0]
+			num <-- $result
+		else
+			:set retValMul $result
+			{if [.get __par_N = $num]
+				:breakReturn all $retValMul
+			}
+		}
+	}
+}
+
+{deffunc foreach_race (p_vari _expr)
+	.var all
+	{foreach @all $p_vari
+		.var retVal
+		:set retVal $_expr
+		:breakReturn all $retVal
+	}
+}
+
+{deffunc foreach_race_mult (p_vari p_mult _expr)
+	.var all
+	.varmul nbBranches
+	.varmul retValMul
+	.var mult
+	{foreach @all $p_vari
+		:set nbBranches 1
+		:set retValMul $_expr
+		{if [.multiplicity $nbBranches = $p_mult]
+			:breakReturn all $retValMul
+		}
+	}
+}
+
+{deffunc breakReturn (p_vari p_valRet)
+	:set $p_vari {short (p_valRet) `return {returnValue: p_valRet}`}
+}
+
+{deffunc whileTrue_dependsOn (p_varParList _expr)
+	{whileTrue
+		.var all
+		{foreach @all p_varParList
+			:await $p_varParList beep
+			.break all
+		}
+		$_expr
+	}
+}
+
+{deffunc restart (p_vari)
+	:set $p_vari 1
+}
+
+{deffunc togglePause (p_vari)
+	:set $p_vari 2
+}
+
+{deffunc pause (p_vari)
+	:set $p_vari 3
+}
+
+{deffunc resume (p_vari)
+	:set $p_vari 4
+}
+
+# select a branch with {seq .disableCancelFor SUG_branch :set SUG_multReturn false}
+{deffunc par_select_mult __par
+	.var SUG_branch
+	.var SUG_analyse
+	.varmul SUG_multReturn
+	.var SUG_mult
+	{par
+		{seq
+			{foreach __par
+				.var result
+				:set result {evalget @SUG_branch __par}
+				{if [.get __par_N = 0]
+					SUG_mult <-- $result
+				else
+					:set SUG_multReturn $result
+					$result
+				}
+			}
+			$SUG_multReturn
+		}
+		{seq @SUG_analyse
+			:await SUG_mult beep
+			{whileTrue
+				:await SUG_multReturn beep
+				{if [.multiplicity $SUG_multReturn = $SUG_mult]
+					.break SUG_branch
+					.break SUG_analyse
+				}
+			}
+		}
+	}
+}
+
+# select a branch with {seq .disableCancelFor SUG_branch :set SUG_multReturn false}
+{deffunc foreach_select_mult (p_vari p_mult _expr)
+	.var SUG_branch
+	.var SUG_analyse
+	.varmul SUG_multReturn
+	{par
+		{seq
+			{foreach $p_vari
+				.var result
+				:set result {evalget @SUG_branch _expr}
+				:set SUG_multReturn $result
+				$result
+			}
+			$SUG_multReturn
+		}
+		{seq @SUG_analyse
+			{whileTrue
+				:await SUG_multReturn beep
+				{if [.multiplicity $SUG_multReturn = $p_mult]
+					.break SUG_branch
+					.break SUG_analyse
+				}
+			}
+		}
+	}
+}
+
+# select a branch with {seq .disableCancelFor SUG_branch :set SUG_multReturn false}
+{deffunc foreachIn_select_mult (p_vari p_multiVal p_mult _expr)
+	.var SUG_branch
+	.var SUG_analyse
+	.varmul SUG_multReturn
+	{par
+		{seq
+			{foreachIn $p_vari $p_multiVal
+				.var result
+				:set result {evalget @SUG_branch _expr}
+				:set SUG_multReturn $result
+				$result
+			}
+			$SUG_multReturn
+		}
+		{seq @SUG_analyse
+			{whileTrue
+				:await SUG_multReturn beep
+				{if [.multiplicity $SUG_multReturn = $p_mult]
+					.break SUG_branch
+					.break SUG_analyse
+				}
+			}
+		}
+	}
+}
