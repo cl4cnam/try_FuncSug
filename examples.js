@@ -468,7 +468,7 @@ var cardList := js ():
 	return document.querySelectorAll('#gameTable > div')
 var remainingCards := listToPar(cardList)
 
-var winner
+var aligner
 while not isNovalue(remainingCards):
 	parallel(for card in remainingCards, select 1):
 		select:
@@ -477,17 +477,17 @@ while not isNovalue(remainingCards):
 			displayMessageIn('<img src="' + (calljs imageOf(player)) + '">', card)
 			card.player := player
 			remainingCards := valuesFrom(remainingCards, 'butNotFrom', card)
-	winner := calljs checkWin(cardList)
-	if winner:
+	aligner := calljs checkWin(cardList)
+	if aligner:
 		remainingCards := | |
 	else:
 		player := calljs otherPlayer(player)
 		displayMessageIn(player + ' is up', '#message')
 
-if winner:
-	displayMessageIn(winner + ' wins', '#message')
+if aligner:
+	displayMessageIn('Three aligned ' + aligner + 's', '#message')
 else:
-	displayMessageIn('Draw', '#message')`
+	displayMessageIn('No alignment', '#message')`
 	],
 	//=============================
 	puzzle15: ['text',
