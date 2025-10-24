@@ -158,6 +158,141 @@ parallel(select 1) ||
 	displayNewMessage("You've hesitated")`
 	],
 	//=============================
+	sequentialButtons: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`#-------------
+# Preparation
+#-------------
+displayNewMessage('Click all the buttons <strong>in order</strong>')
+
+displayNewHtml(\`
+	<button id="button1" disabled>Button 1</button>
+	<button id="button2" disabled>Button 2</button>
+	<button id="button3" disabled>Button 3</button>
+	<button id="button4" disabled>Button 4</button>
+\`)
+
+#-----------
+# Waiting
+#-----------
+# All the buttons are waiting to be clicked one by one, in order
+awaitClickBeep('#button1')
+awaitClickBeep('#button2')
+awaitClickBeep('#button3')
+awaitClickBeep('#button4')
+
+displayNewMessage('Well done!')`
+	],
+	//=============================
+	parallelAndButtons: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`#-------------
+# Preparation
+#-------------
+displayNewMessage('Click all the buttons in <strong>any</strong> order')
+
+displayNewHtml(\`
+	<button id="button1" disabled>Button 1</button>
+	<button id="button2" disabled>Button 2</button>
+	<button id="button3" disabled>Button 3</button>
+	<button id="button4" disabled>Button 4</button>
+\`)
+
+#-----------
+# Waiting
+#-----------
+# All the buttons are simultaneously waiting to be clicked, and none gives up
+parallel:
+	awaitClickBeep('#button1')
+	awaitClickBeep('#button2')
+	awaitClickBeep('#button3')
+	awaitClickBeep('#button4')
+
+displayNewMessage('Well done!')`
+	],
+	//=============================
+	parallelOrButtons: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`#-------------
+# Preparation
+#-------------
+displayNewMessage('Click any one button')
+
+displayNewHtml(\`
+	<button id="button1" disabled>Button 1</button>
+	<button id="button2" disabled>Button 2</button>
+	<button id="button3" disabled>Button 3</button>
+	<button id="button4" disabled>Button 4</button>
+\`)
+
+#-----------
+# Waiting
+#-----------
+# All the buttons are simultaneously waiting to be clicked, but give up as soon as another is clicked
+parallel exitAfter 1 finished:
+	awaitClickBeep('#button1')
+	awaitClickBeep('#button2')
+	awaitClickBeep('#button3')
+	awaitClickBeep('#button4')
+
+displayNewMessage('Well done!')`
+	],
+	//=============================
+	parallelOr2Buttons: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`#-------------
+# Preparation
+#-------------
+displayNewMessage('Click any two buttons')
+
+displayNewHtml(\`
+	<button id="button1" disabled>Button 1</button>
+	<button id="button2" disabled>Button 2</button>
+	<button id="button3" disabled>Button 3</button>
+	<button id="button4" disabled>Button 4</button>
+\`)
+
+#-----------
+# Waiting
+#-----------
+# All the buttons are simultaneously waiting to be clicked, but give up as soon as two others are clicked
+parallel exitAfter 2 finished:
+	awaitClickBeep('#button1')
+	awaitClickBeep('#button2')
+	awaitClickBeep('#button3')
+	awaitClickBeep('#button4')
+
+displayNewMessage('Well done!')`
+	],
+	//=============================
 	hand: ['text',
 		`<!DOCTYPE html>
 <html>
