@@ -339,7 +339,7 @@ displayNewMessage('Well done!')`
 		<p id="response"></p>
 		<p id="end"></p>
 	</body>
-</html>`,``,``,`# This seems to work only because the executions of 'displayNewMessage("Oh, yes..."/"Yes...")' don't last long
+</html>`,``,``,`# If this seems to work, it's only because the executions of 'displayNewMessage("Oh, yes..."/"Yes...")' don't last long
 
 # 1) Display the question
 #------------------------
@@ -403,7 +403,7 @@ displayMessageIn('--- THE END ---', '#end')`
 
 	<body>
 	</body>
-</html>`,``,``,`# This seems to work only because the executions of 'displayNewMessage(resp.../"Water")' don't last long
+</html>`,``,``,`# If this seems to work, it's only because the executions of 'displayNewMessage(response.../"Water")' don't last long
 
 displayNewMessage("What does a cow drink?")
 
