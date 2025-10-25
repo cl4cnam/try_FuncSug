@@ -61,6 +61,38 @@ parallel exitAfter 1 finished ||
 displayNewMessageIn('--- The End ---', 'body/final')`
 	],
 	//=============================
+	helloYouLessIndiscreetBetter: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,`.final {
+	background-color: #80ffff;
+	margin: auto;
+}`,``,`displayNewMessage('What is your name?')
+
+# parallel(select N)
+# ------------------
+#     As soon as any N of the branches reaches "...---", all the other branches are definitively interrupted
+
+parallel(select 1) ||
+||============
+	var theName := awaitHumanText()
+...---
+	displayNewMessage('Hello, ' + theName + '!')
+||============
+	waitSeconds(5)
+...---
+	displayNewMessage("Oops, maybe, I'm being too indiscreet!")
+
+# '.final' is defined in the 'CSS' tab
+displayNewMessageIn('--- The End ---', 'body/final')`
+	],
+	//=============================
 	guessNumber: ['text',
 		`<!DOCTYPE html>
 <html>
