@@ -82,8 +82,8 @@ while triedNumber != numberToGuess:
 		displayNewMessage('Too low! Try again!')
 	if triedNumber > numberToGuess:
 		displayNewMessage('Too high! Try again!')
-	if triedNumber = numberToGuess:
-		displayNewMessage('Well Done!')`
+
+displayNewMessage('Well Done!')`
 	],
 	//=============================
 	buttonSequence: ['text',
