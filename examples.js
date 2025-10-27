@@ -885,6 +885,140 @@ displayNewMessage('Congratulations, you have found all identical cards!')
 `
 	],
 	//=============================
+	chooseGame: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,`button {
+	margin: 10px;
+	&.clicked {
+		color: green;
+		font-weight: bold;
+	}
+}
+.gameSpace {
+	background-color: #444;
+	padding: 3px;
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
+	gap: 1em;
+	& > div {
+		background-color: #888;
+	}
+}
+#gameTableIntern {
+	display: flex;
+	flex-flow: row wrap;
+	button {
+		padding: 10px;
+		margin: 10px;
+	}
+}`,`function makeButtons(howMany) {
+	return '<button disabled> </button>'.repeat(howMany)
+}
+
+function randomNumbers(max) {
+	return [0,0,0,0,0].map( e=>Math.floor( (max)*Math.random()+1 ) )
+}`,`var choiceSpace
+var gameSpace
+
+def newGameSpace():
+	#addCssClassTo('gameSpace', gameSpace)
+	gameSpace := displayNewElementIn('', 'body/gameSpace', 'div', true)
+
+def guessNumber(p_min, p_max):
+	var gameTable := displayNewElementIn('', gameSpace, 'div', true)
+	addCssClassTo('guessNumber', gameTable)
+	
+	var numberToGuess := randomIntBetween(p_min, p_max)
+	var triedNumber := 'notTried'
+	displayNewMessageIn('Guess my number (between ' + p_min + ' and ' + p_max + ')!', gameTable)
+
+	while triedNumber != numberToGuess:
+		
+		triedNumber := awaitNewHumanTextIn('.gameSpace:last-of-type > div.guessNumber')
+		
+		if triedNumber < numberToGuess:
+			displayNewMessageIn('Too low! Try again!', gameTable)
+		if triedNumber > numberToGuess:
+			displayNewMessageIn('Too high! Try again!', gameTable)
+
+	displayNewMessageIn('Well Done!', gameTable)
+	'Guess the Number'
+
+def findButtons(p_numberOfButtons):
+	var gameTable := displayNewElementIn('', gameSpace, 'div', true)
+	addCssClassTo('findButtons', gameTable)
+	
+	displayNewMessageIn('Find the buttons!', gameTable)
+	displayNewHtmlIn('<div id="gameTableIntern"></div>', gameTable)
+	displayNewHtmlIn(calljs makeButtons(p_numberOfButtons), '#gameTableIntern')
+
+	var buttonNum := listToPar(calljs randomNumbers(p_numberOfButtons))
+	parallel forEachValueOf buttonNum:
+		awaitClickBeep('#gameTableIntern > button:nth-of-type(' + buttonNum + ')')
+	displayNewMessageIn('You found them!', gameTable)
+	'Find the buttons'
+
+def askForChoice(p_question):
+	displayNewMessage(p_question)
+	choiceSpace := displayNewMessageIn('', 'body/self')
+
+def waitForChoice(p_message):
+	awaitClickBeep(displayNewElementIn(p_message, choiceSpace, 'button', true))
+
+askForChoice('Hello! What do you want to play?')
+parallel(select 1) ||
+||===========
+	waitForChoice('"Guess the Number" (between 1 and 100)')
+...---
+	newGameSpace()
+	guessNumber(1, 100)
+	displayNewMessage('Congratulations!')
+||===========
+	waitForChoice('"Find the buttons"')
+...---
+	newGameSpace()
+	findButtons(100)
+	displayNewMessage('Congratulations!')
+||===========
+	waitForChoice('Both the games')
+...---
+	newGameSpace()
+	parallel:
+		guessNumber(1, 10)
+		findButtons(100)
+	displayNewMessage('I hope you had a good time!')
+||===========
+	waitForChoice('Both the games but just to succeed in one yet')
+...---
+	newGameSpace()
+	var game := parallel exitAfter 1 finished:
+		guessNumber(1, 10)
+		findButtons(100)
+	displayNewMessage("Congratulations! You've succeeded in one game: " + game + '!')
+||===========
+	waitForChoice('Both the games forever!')
+...---
+	newGameSpace()
+	parallel:
+		while true:
+			guessNumber(1, 10)
+			waitSeconds(2)
+			removeElt('.gameSpace:last-of-type > div.guessNumber')
+		while true:
+			findButtons(100)
+			waitSeconds(2)
+			removeElt('.gameSpace:last-of-type > div.findButtons')
+`
+	],
+	//=============================
 	counter: ['text',
 		`<!DOCTYPE html>
 <html>
