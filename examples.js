@@ -437,6 +437,82 @@ parallel(select 1) ||
 	displayNewMessage("Water")`
 	],
 	//=============================
+	wonderland: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,`button {
+	margin: 10px;
+	&.clicked {
+		color: green;
+		font-weight: bold;
+	}
+}
+.final {
+	background-color: #80ffff;
+	margin: auto;
+}`,``,`var choiceSpace
+
+def askForChoice(p_question):
+	displayNewMessage(p_question)
+	choiceSpace := displayNewMessageIn('', 'body/self')
+
+def waitForChoice(p_message):
+	awaitClickBeep(displayNewElementIn(p_message, choiceSpace, 'button', true))
+
+def display(p_message):
+	displayNewMessage(p_message)
+	waitSeconds(2)
+
+display("Hello! You've just arrived in Wonderland.")
+display("You're at a crossroads.")
+askForChoice('Which direction are you choosing?')
+parallel(select 1) ||
+||==================================
+	waitForChoice('The rabbit')
+...-----
+	display("Oh! It's your unbirthday!")
+	display('Have a good time!')
+||==================================
+	waitForChoice('The house')
+...-----
+	display("Oh! What a beautiful house!")
+	askForChoice('But... What are you eating?')
+	parallel(select 1) ||
+	||=====================
+		waitForChoice('An apple')
+	...-----
+		display('Oh! What! Everything is growing around you!')
+		display("No, it's you who's shrinking!")
+		display("Oh! Two doors in front of you!")
+		askForChoice('Which are you passing through?')
+		parallel(select 1) ||
+		||=============
+			waitForChoice('The green one')
+		...---
+			display("Oh! What a beautiful garden!")
+			display('Have a good journey!')
+		||=============
+			waitForChoice('The pink one')
+		...---
+			display("Oh! What a beautiful sea!")
+			display('Have a good journey!')
+	||=====================
+		waitForChoice('A pear')
+	...-----
+		display("Ouch! What's hurting you?")
+		display("It's the ceiling! You're too tall.")
+		display("Fortunately, the ceiling is not very solid.")
+		display("Now that you are a giant, you can see the whole country.")
+		display('Have a good journey!')
+displayNewMessageIn('--- The End ---', 'body/final')`
+	],
+	//=============================
 	chaseButton: ['text',
 		`<!DOCTYPE html>
 <html>
