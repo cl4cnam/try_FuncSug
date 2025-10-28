@@ -975,47 +975,70 @@ def waitForChoice(p_message):
 
 askForChoice('Hello! What do you want to play?')
 parallel(select 1) ||
-||===========
+||=========================================================
 	waitForChoice('"Guess the Number" (between 1 and 100)')
 ...---
 	newGameSpace()
 	guessNumber(1, 100)
-	displayNewMessage('Congratulations!')
-||===========
+	displayNewMessage('See you later!')
+||========================================
 	waitForChoice('"Find the buttons"')
 ...---
 	newGameSpace()
 	findButtons(100)
-	displayNewMessage('Congratulations!')
-||===========
+	displayNewMessage('See you later!')
+||========================================
 	waitForChoice('Both the games')
 ...---
-	newGameSpace()
-	parallel:
-		guessNumber(1, 10)
-		findButtons(100)
-	displayNewMessage('I hope you had a good time!')
-||===========
-	waitForChoice('Both the games but just to succeed in one yet')
-...---
-	newGameSpace()
-	var game := parallel exitAfter 1 finished:
-		guessNumber(1, 10)
-		findButtons(100)
-	displayNewMessage("Congratulations! You've succeeded in one game: " + game + '!')
-||===========
-	waitForChoice('Both the games forever!')
-...---
-	newGameSpace()
-	parallel:
-		while true:
+	askForChoice('Oh! Ok, but how?')
+	parallel(select 1) ||
+	||===================
+		waitForChoice('One at a time')
+	...---
+		askForChoice('But which first?')
+		parallel(select 1) ||
+		||==============
+			waitForChoice('Guess the Number')
+		...---
+			newGameSpace()
 			guessNumber(1, 10)
-			waitSeconds(2)
-			removeElt('.gameSpace:last-of-type > div.guessNumber')
-		while true:
 			findButtons(100)
-			waitSeconds(2)
-			removeElt('.gameSpace:last-of-type > div.findButtons')
+		||==============
+			waitForChoice('Find the Buttons')
+		...---
+			newGameSpace()
+			findButtons(100)
+			guessNumber(1, 10)
+		displayNewMessage('I hope you had a good time!')
+	||====================
+		waitForChoice('At the same time and until I finished both')
+	...---
+		newGameSpace()
+		parallel:
+			guessNumber(1, 10)
+			findButtons(100)
+		displayNewMessage('I hope you had a good time!')
+	||====================
+		waitForChoice('At the same time and until I finished just one')
+	...---
+		newGameSpace()
+		var game := parallel exitAfter 1 finished:
+			guessNumber(1, 10)
+			findButtons(100)
+		displayNewMessage("Congratulations! You've succeeded in one game: '" + game + "'!")
+	||=====================
+		waitForChoice('At the same time and forever!')
+	...---
+		newGameSpace()
+		parallel:
+			while true:
+				guessNumber(1, 10)
+				waitSeconds(2)
+				removeElt('.gameSpace:last-of-type > div.guessNumber')
+			while true:
+				findButtons(100)
+				waitSeconds(2)
+				removeElt('.gameSpace:last-of-type > div.findButtons')
 `
 	],
 	//=============================
