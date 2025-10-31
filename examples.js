@@ -610,24 +610,22 @@ while true:
 	<body>
 		<svg width="800" height="600" fill="#0f0" stroke="gray">
 			<rect x="0" y="0" width="800" height="600" />
-			<rect x="200" y="0" width="400" height="600" fill="#0ff" />
+			<rect x="200" y="0" width="400" height="600" fill="#0ff" stroke="#0ff" />
 		</svg>
 		<button id="stone1" disabled></button>
 		<button id="stone2" disabled></button>
 		<button id="stone3" disabled></button>
 		<button id="stone4" disabled></button>
 		<button id="stone5" disabled></button>
-		<svg id="frog" width="80" height="80" fill="#0f0" stroke="gray">
-			<g id="frog2" fill="#0c0" transform="translate(80 0) rotate(90)">
-				<circle cx="35" cy="60" r="10" />
-				<circle cx="65" cy="60" r="10" />
-				<circle cx="50" cy="30" r="15" />
-				<circle cx="40" cy="18" r="5" fill="white" />
-				<circle cx="60" cy="18" r="5" fill="white" />
-				<circle cx="40" cy="15" r="3" fill="black" />
-				<circle cx="60" cy="15" r="3" fill="black" />
-				<circle cx="50" cy="50" r="20" />
-			</g>
+		<svg id="frog" width="80" height="80" fill="#0c0" stroke="gray">
+			<circle cy="35" cx="20" r="10" />
+			<circle cy="65" cx="20" r="10" />
+			<circle cy="50" cx="50" r="15" />
+			<circle cy="40" cx="62" r="5" fill="white" />
+			<circle cy="60" cx="62" r="5" fill="white" />
+			<circle cy="40" cx="65" r="3" fill="black" />
+			<circle cy="60" cx="65" r="3" fill="black" />
+			<circle cy="50" cx="30" r="20" />
 		</svg>
 	</body>
 </html>`,`body {
@@ -654,15 +652,19 @@ button {
 	&:disabled {background-color: #00e000; border: solid #00e000}
 }
 #frog {top: 200px; left: 112px}
+.init {position: absolute; top: 100px; left: 100px; background-color: white; max-width: 200px}
+.final {position: absolute; top: 110px; left: 600px; background-color: white; max-width: 100px}
 `,`function goToStone(num) {
 	document.getElementById('frog').style.left = "" + (112+100*num) + "px"
 }
 `,`var num := 0
-var frog := getElement('#frog')
+var initMessage := displayNewMessageIn('I want to cross the river.<br>Help me! Please!', 'body/init')
 repeat 5:
 	num += 1
 	awaitClickBeep('#stone' + num)
-	calljs goToStone(num)`
+	removeElt(initMessage)
+	calljs goToStone(num)
+displayNewMessageIn('Thanks! 🙂', 'body/final')`
 	],
 	//=============================
 	coloringBook: ['text',
