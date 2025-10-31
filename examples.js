@@ -600,6 +600,71 @@ while true:
 # Try to make this program in JavaScript/DOM or your favorite programming language!`
 	],
 	//=============================
+	crossRiver: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<svg width="800" height="600" fill="#0f0" stroke="gray">
+			<rect x="0" y="0" width="800" height="600" />
+			<rect x="200" y="0" width="400" height="600" fill="#0ff" />
+		</svg>
+		<button id="stone1" disabled></button>
+		<button id="stone2" disabled></button>
+		<button id="stone3" disabled></button>
+		<button id="stone4" disabled></button>
+		<button id="stone5" disabled></button>
+		<svg id="frog" width="80" height="80" fill="#0f0" stroke="gray">
+			<g id="frog2" fill="#0c0" transform="translate(80 0) rotate(90)">
+				<circle cx="35" cy="60" r="10" />
+				<circle cx="65" cy="60" r="10" />
+				<circle cx="50" cy="30" r="15" />
+				<circle cx="40" cy="18" r="5" fill="white" />
+				<circle cx="60" cy="18" r="5" fill="white" />
+				<circle cx="40" cy="15" r="3" fill="black" />
+				<circle cx="60" cy="15" r="3" fill="black" />
+				<circle cx="50" cy="50" r="20" />
+			</g>
+		</svg>
+	</body>
+</html>`,`body {
+	position: relative;
+}
+svg {
+	position: absolute; top: 0; left: 0;
+	margin: 0; padding: 0;
+}
+button {
+	position: absolute; top: 210px;
+	width: 80px; height: 80px;
+	border-radius: 30px;
+	background-color: #eee;
+	&:disabled {background-color: #ccc; border: solid #ccc}
+}
+#stone1 {left: 210px}
+#stone2 {left: 310px}
+#stone3 {left: 410px}
+#stone4 {left: 510px}
+#stone5 {
+	left: 610px;
+	background-color: #00ee00;
+	&:disabled {background-color: #00e000; border: solid #00e000}
+}
+#frog {top: 200px; left: 112px}
+`,`function goToStone(num) {
+	document.getElementById('frog').style.left = "" + (112+100*num) + "px"
+}
+`,`var num := 0
+var frog := getElement('#frog')
+repeat 5:
+	num += 1
+	awaitClickBeep('#stone' + num)
+	calljs goToStone(num)`
+	],
+	//=============================
 	coloringBook: ['text',
 		`<!DOCTYPE html>
 <html>
