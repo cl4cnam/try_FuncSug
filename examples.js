@@ -640,6 +640,7 @@ button {
 	width: 80px; height: 80px;
 	border-radius: 30px;
 	background-color: #eee;
+	border: outset 2px #eee;
 	&:disabled {background-color: #ccc; border: solid #ccc}
 }
 #stone1 {left: 210px}
