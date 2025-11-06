@@ -668,6 +668,78 @@ repeat 5:
 displayNewMessageIn('Thanks! 🙂', 'body/final')`
 	],
 	//=============================
+	crossRiverVariant: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<svg width="800" height="600" fill="#0f0" stroke="gray">
+			<rect x="0" y="0" width="800" height="600" />
+			<rect x="200" y="0" width="400" height="600" fill="#0ff" stroke="#0ff" />
+		</svg>
+		<button id="stone1" disabled></button>
+		<button id="stone2" disabled></button>
+		<button id="stone3" disabled></button>
+		<button id="stone4" disabled></button>
+		<button id="stone5" disabled></button>
+		<svg id="frog" width="80" height="80" fill="#0c0" stroke="gray">
+			<circle cy="35" cx="20" r="10" />
+			<circle cy="65" cx="20" r="10" />
+			<circle cy="50" cx="50" r="15" />
+			<circle cy="40" cx="62" r="5" fill="white" />
+			<circle cy="60" cx="62" r="5" fill="white" />
+			<circle cy="40" cx="65" r="3" fill="black" />
+			<circle cy="60" cx="65" r="3" fill="black" />
+			<circle cy="50" cx="30" r="20" />
+		</svg>
+	</body>
+</html>`,`body {
+	position: relative;
+}
+svg {
+	position: absolute; top: 0; left: 0;
+	margin: 0; padding: 0;
+}
+button {
+	position: absolute; top: 210px;
+	width: 80px; height: 80px;
+	border-radius: 30px;
+	background-color: #eee;
+	border: outset 2px #eee;
+	&:disabled {background-color: #ccc; border: solid #ccc}
+}
+#stone1 {left: 210px}
+#stone2 {left: 310px}
+#stone3 {left: 410px}
+#stone4 {left: 510px}
+#stone5 {
+	left: 610px;
+	background-color: #00ee00;
+	&:disabled {background-color: #00e000; border: solid #00e000}
+}
+#frog {top: 200px; left: 112px}
+.init {position: absolute; top: 100px; left: 100px; background-color: white; max-width: 200px}
+.final {position: absolute; top: 110px; left: 600px; background-color: white; max-width: 100px}
+`,`function goToStone(num) {
+	document.getElementById('frog').style.left = "" + (112+100*num) + "px"
+}
+`,`# Only this tab (FuncSug code) has been modified
+var num := 0
+var initMessage := displayNewMessageIn('I want to cross the river.<br>Help me! Please!', 'body/init')
+parallel ||
+	awaitClickBeep('#stone1')
+	removeElt(initMessage)
+||
+	repeat 5:
+		num += 1
+		awaitClickBeep('#stone' + num)
+		calljs goToStone(num)
+displayNewMessageIn('Thanks! 🙂', 'body/final')`
+	],
+	//=============================
 	coloringBook: ['text',
 		`<!DOCTYPE html>
 <html>
