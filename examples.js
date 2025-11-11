@@ -681,7 +681,9 @@ displayNewMessageIn('Thanks! 🙂', 'body/final')`
 			<rect x="200" y="0" width="400" height="600" fill="#0ff" stroke="#0ff" />
 		</svg>
 		<svg id="fish" width="80" height="40" fill="red">
-			<rect x="0" y="0" width="80" height="40"/>
+			<rect x="0" y="0" width="80" height="40" rx="20" ry="20" />
+			<circle cx="20" cy="10" r="3" fill="black" />
+			<circle cx="60" cy="10" r="3" fill="black" />
 		</svg>
 		<button id="stone1" disabled></button>
 		<button id="stone2" disabled></button>
