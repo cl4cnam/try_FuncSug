@@ -743,17 +743,23 @@ function getTheFish() {
 var fish := calljs getTheFish()
 
 parallel ||
+	# The crab/fish walks in the river.
+	#----------------------------------
 	while true:
 		goToAtSpeed(fish, coord(400,500), 100)
 		goToAtSpeed(fish, coord(500,300), 100)
 		goToAtSpeed(fish, coord(200,300), 400)
 ||
+	# The crab/fish is sensitive to clicks: it toggles its color blue or red.
+	#------------------------------------------------------------------------
 	while true:
 		awaitClickBeep('#fish')
 		fish.style.fill := 'blue'
 		awaitClickBeep('#fish')
 		fish.style.fill := 'red'
 ||
+	# You can help the frog to cross the river.
+	#------------------------------------------
 	var initMessage := displayNewMessageIn('I want to cross the river.<br>Help me! Please!', 'body/init')
 	repeat 5:
 		num += 1
