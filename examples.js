@@ -1808,6 +1808,46 @@ parallel ||
 displayNewMessage('--- The End ---')`
 	],
 	//=============================
+	awaitVariableBipBeep: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage('Please, wait...')
+
+var myVariable
+
+parallel exitWith branch 3 ||
+	waitSeconds(1)
+	displayNewMessage("Before the change of myVariable")
+	# myVariable will 'bip' during one cycle
+	myVariable := 'Anything'
+	# myVariable continue to 'beep' until an 'awaitBeep' instruction is executed
+	displayNewMessage("After the change of myVariable")
+||
+	# --- awaiting BIP ---
+	#---------------------
+	waitSeconds(3)
+	# await a change (of myVariable) which will never happen 
+	awaitBip myVariable
+	# This message will never be displayed because awaitBip is too late
+	displayNewMessage("myVariable has just been changed but I won't tell you!")
+||
+	# --- awaiting BEEP ---
+	#----------------------
+	waitSeconds(3)
+	# await a change of myVariable
+	awaitBeep myVariable
+	# This message will be displayed despite the fact that awaitBeep is too late
+	displayNewMessage("myVariable has just been changed (I'm not considered too late because 'beep' don't last only one cycle)")
+
+displayNewMessage('--- The End ---')`
+	],
+	//=============================
 	awaitBool: ['text',
 		`<!DOCTYPE html>
 <html>
