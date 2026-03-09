@@ -1508,6 +1508,36 @@ parallel:
 			addCssClassTo('notSync', 'body')`
 	],
 	//=============================
+	workflow1: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`# This example is taken from https://yawlfoundation.github.io/assets/files/YAWLUserManual5.2.pdf (end of page 68)
+def getBookDetails():
+	displayNewMessage('Get book details')
+	'The book'
+def orderAndWait(p_seller, p_details):
+	displayNewMessage('Order to ' + p_seller)
+	var duration := waitSeconds(randomIntBetween(3,7))
+	displayNewMessage('The wait time at ' + p_seller + ' was ' + (duration/1000) + ' days')
+	randomIntBetween(40,50)
+def pay(p_price):
+	displayNewMessage('Pay $' + p_price)
+var price
+
+var details := getBookDetails()
+parallel exitAfter 1 finished:
+	price := orderAndWait('Amazon', details)
+	price := orderAndWait('Booktopia', details)
+	price := orderAndWait('Bookfinder', details)
+pay(price)`
+	],
+	//=============================
 	calljs: ['text',
 		`<!DOCTYPE html>
 <html>
