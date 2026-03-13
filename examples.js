@@ -1988,6 +1988,23 @@ parallel ||
 displayNewMessage("--- THE END ---")`
 	],
 	//=============================
+	helloWorldAndOthersParSeq2: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`var M1 := displayNewMessage('Hello, World!')
+var M2 := displayNewMessage("Hello to the others!")
+waitSeconds(5)
+removeElt(M1)
+removeElt(M2)
+displayNewMessage("--- THE END ---")`
+	],
+	//=============================
 	tbcDemo0: ['text',
 		`<!DOCTYPE html>
 <html>
