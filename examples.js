@@ -1360,6 +1360,207 @@ parallel(select 1) ||
 `
 	],
 	//=============================
+	canalLock: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<script src="FuncSug/libMove.fg" type="application/funcsug"></script>
+	</body>
+</html>`,`
+body {
+	margin: 0; padding: 0;
+}
+#sky > rect {
+	width: 946.06616px;
+}
+.display {
+	position: absolute;
+}
+#sky {
+	width: 946.06616px;
+}
+#sun {
+	left: 10px;
+	top: 10px;
+}
+#sun > path {
+	fill: #ff6 !important;
+}
+#cloud2 {
+	transform: scale(0.7) translateX(130px);
+}
+#lightAtLeft {
+	left: 300px;
+	top: 300px;
+}
+#lightAtRight {
+	left: 650px;
+	top: 200px;
+	transform: scaleX(-1);
+}
+#boat {
+	left: 100px;
+	top: 273px;
+}`,`
+function getTheBoat() {
+	const ob = document.getElementById('boat')
+	ob.getXy = ()=> ['left','top'].map(p=>parseInt(getComputedStyle(ob).getPropertyValue(p)))
+	ob.setXy = (...args)=> ['left','top'].map((p,i)=>{ob.style[p] = '' + args[i] + 'px'})
+	ob.fg_num = 1
+	return ob
+}
+function setChangeable(valve) {
+	valve.getXy = ()=> {
+		const top = parseInt(getComputedStyle(valve).getPropertyValue('top'))
+		const height = parseInt(valve.getAttribute('height'))
+		return [top, height]
+	}
+	valve.setXy = (top, height)=> {
+		valve.style.top = '' + top + 'px'
+		valve.querySelector('rect').setAttribute('height', height)
+		valve.setAttribute('height', height)
+	}
+}
+function getBoatTarget(p_boatPosition, p_gates) {
+	return {
+		'["left","leftOpened"]': {target: 'center_bottom', coor: [450,273], newBoat: false},
+		'["center_bottom","leftOpened"]': {target: 'left', coor: [100,273], newBoat: 'boat1'},
+		'["right","rightOpened"]': {target: 'center_top', coor: [450,167], newBoat: false},
+		'["center_top","rightOpened"]': {target: 'right', coor: [750,167], newBoat: 'boat2'}
+	}[JSON.stringify([p_boatPosition, p_gates])]
+}
+`,`# Images by Timothée Giet, following the model of the GCompris (by Bruno Coudoin) activity "Canal Lock" (GPL3).
+# The images and the sounds are copied from GCompris activity, the code is original.
+# License: GPL3
+def displayComponent(p_id, p_res):
+	var elt := displayNewImageIn('img/' + p_res + '.svg', 'body')
+	js (elt, p_id):
+		elt.id = p_id
+def displayRect(p_id, p_x, p_y, p_width, p_height, p_color):
+	displayNewHtml('
+		<svg id="' + p_id + '" class="display" style="left: ' + p_x + 'px; top: ' + p_y + 'px" width="' + p_width + '" height="' + p_height + '">
+			<rect x="0" y="0" width="' + p_width + '" height="' + p_height + '" fill="' + p_color + '"/>
+		</svg>
+	')
+	var elt := getElement('#' + p_id)
+	calljs setChangeable(elt)
+	elt
+def setComponentSrc(p_id, p_src):
+	var component := getElement('#' + p_id)
+	if p_src:
+		component.src := 'img/' + p_src + '.svg'
+
+displayComponent('sky', 'sky')
+displayComponent('canal_lock', 'canal_lock')
+displayComponent('sun', 'sun')
+displayComponent('cloud2', 'cloud2')
+displayComponent('lightAtLeft', 'light_red')
+displayComponent('lightAtRight', 'light_red')
+var water := displayRect('water', 407, 367, 196, 13, '#4f76d6')
+displayComponent('boat', 'boat1')
+var boat := calljs getTheBoat()
+var leftValve := displayRect('leftValve', 300, 480, 30, 80, '#dd4')
+var rightValve := displayRect('rightValve', 660, 480, 30, 80, '#dd4')
+var leftGate := displayRect('leftGate', 390, 240, 30, 240, '#4d4')
+var rightGate := displayRect('rightGate', 590, 240, 30, 240, '#4d4')
+
+var waterLevel := 'low'
+var gates := 'closed'
+var openedValve := 'none'
+var boatPosition := 'left'
+var boatMovement := false
+
+def moveGate(p_gate, p_direction):
+	parallel exitWith branch 1:
+		goToAtSpeed(p_gate, if(p_direction='open', coord(390,90), 'else', coord(240,240)), 100)
+		playSoundFile('sound/door_' + p_direction + '.wav')
+def moveValve(p_valve, p_direction):
+	if p_direction = 'open':
+		openedValve := p_valve
+	parallel exitWith branch 1:
+		goToAtSpeed(p_valve, if(p_direction='open', coord(545,15), 'else', coord(480,80)), 100)
+		playSoundFile('sound/lock.wav')
+	if p_direction = 'open':
+		parallel exitWith branch 1:
+			parallel:
+				goToAtSpeed(water, if(p_valve=leftValve, coord(367,13), 'else', coord(261,119)), 141)
+				if p_valve=leftValve and boatPosition='center_top':
+					goToAtSpeed(boat, coord(450,273), 100)
+					boatPosition := 'center_bottom'
+				if p_valve=rightValve and boatPosition='center_bottom':
+					goToAtSpeed(boat, coord(450,167), 100)
+					boatPosition := 'center_top'
+			playSoundFile('sound/water_fill.wav')
+
+parallel:
+	while true:
+		awaitClickBeep(boat)
+		var target := calljs getBoatTarget(boatPosition, gates)
+		if target:
+			boatMovement := true
+			parallel exitWith branch 1:
+				goToAtSpeed(boat, target.coor, 100)
+				playSoundFile('sound/water.wav')
+			boatPosition := target.target
+			setComponentSrc('boat', target.newBoat)
+			boatMovement := false
+	while true:
+		awaitClickBeep(leftGate)
+		if waterLevel = 'low':
+			moveGate(leftGate, 'open')
+			setComponentSrc('lightAtLeft', 'light_green')
+			gates := 'leftOpened'
+			awaitClickBeep(leftGate)
+			while boatMovement:
+				awaitClickBeep(leftGate)
+			gates := 'closed'
+			setComponentSrc('lightAtLeft', 'light_red')
+			moveGate(leftGate, 'close')
+		else:
+			playSoundFile('sound/crash.wav')
+	while true:
+		awaitClickBeep(rightGate)
+		if waterLevel = 'high':
+			moveGate(rightGate, 'open')
+			setComponentSrc('lightAtRight', 'light_green')
+			gates := 'rightOpened'
+			awaitClickBeep(rightGate)
+			while boatMovement:
+				awaitClickBeep(rightGate)
+			gates := 'closed'
+			setComponentSrc('lightAtRight', 'light_red')
+			moveGate(rightGate, 'close')
+		else:
+			playSoundFile('sound/crash.wav')
+	while true:
+		awaitClickBeep(leftValve)
+		if gates != 'rightOpened' and openedValve = 'none':
+			waterLevel := 'middle'
+			moveValve(leftValve, 'open')
+			waterLevel := 'low'
+			awaitClickBeep(leftValve)
+			moveValve(leftValve, 'close')
+			openedValve := 'none'
+		else:
+			playSoundFile('sound/crash.wav')
+	while true:
+		awaitClickBeep(rightValve)
+		if gates != 'leftOpened' and openedValve = 'none':
+			waterLevel := 'middle'
+			moveValve(rightValve, 'open')
+			waterLevel := 'high'
+			awaitClickBeep(rightValve)
+			moveValve(rightValve, 'close')
+			openedValve := 'none'
+		else:
+			playSoundFile('sound/crash.wav')
+`
+	],
+	//=============================
 	counter: ['text',
 		`<!DOCTYPE html>
 <html>

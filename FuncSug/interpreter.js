@@ -2457,7 +2457,8 @@ async function runBurst() {
 				//~ if (continuousActionEmpty && cpt3 < 1) requestAnimationFrame(raf_func)
 				//~ else localLog('---STOP')
 				clearContinuousEvents()
-				old_timestamp = timestamp
+				if (continuousActionEmpty) old_timestamp = undefined
+				else old_timestamp = timestamp
 			}
 			if (!frameFunction) requestAnimationFrame(raf_func)
 			if (frameFunction) frameFunction.container[frameFunction.label] = raf_func

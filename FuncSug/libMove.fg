@@ -24,9 +24,10 @@ def goToAtSpeed(p_object, p_target, p_speed):
 				const y = ys + fraction * (yt-ys)
 				p_object.setXy(x,y)
 			} else {
-				goAssign('end', '')
 				p_object.fg_time = undefined
 				p_object.fg_startXy = undefined
 				p_object.fg_dist = undefined
+				p_object.setXy(xt,yt)
+				goAssign('end', '')
 			}
 	waitSeconds(0)
