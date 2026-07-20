@@ -1739,6 +1739,71 @@ parallel exitAfter 1 finished:
 pay(price)`
 	],
 	//=============================
+	keypadLock: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+		<div id="gameTable">
+		</div>
+	</body>
+</html>`,`#gameTable {
+	display: inline-grid;
+	row-gap: 10px;
+}
+
+#gameTable > button {
+	width: 50px;
+	height: 50px;
+}`,`const $ = document.getElementById.bind(document)
+
+const width = 3
+const height = 4
+const size = width*height-1
+
+// The table
+//----------
+const gameTable = $('gameTable')
+gameTable.style.gridTemplateColumns = 'repeat(' + width + ', 60px)'
+for (let i=0; i<size; i++) {
+	gameTable.innerHTML += '<button id="' + i + '" disabled>' + ( (i==10)? 'A' :((i+1)%10) ) + '</button>'
+}
+gameTable.innerHTML += '<button id="' + size + '" disabled>B</button>'
+
+// The code is: 3 A 5 1 9
+//------------------------
+const code = [3-1, 10, 5-1,1-1,9-1] // n-1 represents n ; 10 represents A ; 11 represents B
+
+// the tries
+//----------
+const codes = code.map( c=>
+	({  right:  $(c),  wrong:  [...Array(12).keys()].toSpliced(c,1).map($)  })
+)
+const reset = function() { codes.counter = 0 }
+reset()
+const getSuccess = ()=>( codes.counter == code.length )
+const getNext = ()=>codes[codes.counter++]
+`,`var codes := listToPar(import('codes'))
+
+while not (calljs getSuccess()):
+	var step := calljs getNext()
+	parallel exitAfter 1 finished:
+		awaitClick(step.right)
+		parallel(for button in listToPar(step.wrong), select 1):
+			select:
+				awaitClick(button)
+			do:
+				calljs reset()
+		sequence:
+			waitSeconds(2)
+			calljs reset()
+displayNewMessage('The door is opening')
+`
+	],
+	//=============================
 	calljs: ['text',
 		`<!DOCTYPE html>
 <html>
