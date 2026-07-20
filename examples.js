@@ -131,9 +131,9 @@ displayNewMessage('Well Done!')`
 		<button id="button3" disabled>Button #3</button>
 	</body>
 </html>`,``,``,`while true:
-	awaitClickBeep('#button1')
-	awaitClickBeep('#button2')
-	awaitClickBeep('#button3')
+	awaitClick('#button1')
+	awaitClick('#button2')
+	awaitClick('#button3')
 	displayNewMessage('Well Done!')`
 	],
 	//=============================
@@ -150,11 +150,11 @@ displayNewMessage('Well Done!')`
 
 parallel(select 1) ||
 ||=================
-	awaitClickBeep('#A')
+	awaitClick('#A')
 ...---
 	displayNewMessage("You've chosen A")
 ||================
-	awaitClickBeep('#B')
+	awaitClick('#B')
 ...---
 	displayNewMessage("You've chosen B")`
 	],
@@ -175,13 +175,13 @@ parallel(select 1) ||
 
 parallel(select 1) ||
 ||=================
-	awaitClickBeep('#A')
+	awaitClick('#A')
 	displayNewMessage('<button id="Aconfirmed">Yes, I choose A</button>')
-	awaitClickBeep('#Aconfirmed')
+	awaitClick('#Aconfirmed')
 ...---
 	displayNewMessage("You've chosen A")
 ||================
-	awaitClickBeep('#B')
+	awaitClick('#B')
 ...---
 	displayNewMessage("You've chosen B")
 ||================
@@ -215,10 +215,10 @@ displayNewHtml(\`
 # Waiting
 #-----------
 # All the buttons are waiting to be clicked one by one, in order
-awaitClickBeep('#button1')
-awaitClickBeep('#button2')
-awaitClickBeep('#button3')
-awaitClickBeep('#button4')
+awaitClick('#button1')
+awaitClick('#button2')
+awaitClick('#button3')
+awaitClick('#button4')
 
 displayNewMessage('Well done!')`
 	],
@@ -249,10 +249,10 @@ displayNewHtml(\`
 #-----------
 # All the buttons are simultaneously waiting to be clicked, and none gives up
 parallel:
-	awaitClickBeep('#button1')
-	awaitClickBeep('#button2')
-	awaitClickBeep('#button3')
-	awaitClickBeep('#button4')
+	awaitClick('#button1')
+	awaitClick('#button2')
+	awaitClick('#button3')
+	awaitClick('#button4')
 
 displayNewMessage('Well done!')`
 	],
@@ -283,10 +283,10 @@ displayNewHtml(\`
 #-----------
 # All the buttons are simultaneously waiting to be clicked, but give up as soon as another is clicked
 parallel exitAfter 1 finished:
-	awaitClickBeep('#button1')
-	awaitClickBeep('#button2')
-	awaitClickBeep('#button3')
-	awaitClickBeep('#button4')
+	awaitClick('#button1')
+	awaitClick('#button2')
+	awaitClick('#button3')
+	awaitClick('#button4')
 
 displayNewMessage('Well done!')`
 	],
@@ -317,10 +317,10 @@ displayNewHtml(\`
 #-----------
 # All the buttons are simultaneously waiting to be clicked, but give up as soon as two others are clicked
 parallel exitAfter 2 finished:
-	awaitClickBeep('#button1')
-	awaitClickBeep('#button2')
-	awaitClickBeep('#button3')
-	awaitClickBeep('#button4')
+	awaitClick('#button1')
+	awaitClick('#button2')
+	awaitClick('#button3')
+	awaitClick('#button4')
 
 displayNewMessage('Well done!')`
 	],
@@ -348,10 +348,10 @@ displayMessageIn('What is put on hands?', '#question')
 # 2) Handle the response
 #-----------------------
 parallel exitAfter 1 finished ||
-	awaitClickBeep('#sockButton')
+	awaitClick('#sockButton')
 	displayMessageIn("Oh, yes, as a base for puppets!", '#response')
 ||
-	awaitClickBeep('#gloveButton')
+	awaitClick('#gloveButton')
 	displayMessageIn("Yes, when it's cold.", '#response')
 
 # 3) Announce the end
@@ -381,11 +381,11 @@ displayMessageIn('What is put on hands?', '#question')
 #-----------------------
 parallel(select 1) ||
 ||===============================
-	awaitClickBeep('#sockButton')
+	awaitClick('#sockButton')
 ...---
 	displayMessageIn("Oh, yes, as a base for puppets!", '#response')
 ||================================
-	awaitClickBeep('#gloveButton')
+	awaitClick('#gloveButton')
 ...---
 	displayMessageIn("Yes, when it's cold.", '#response')
 
@@ -463,7 +463,7 @@ def askForChoice(p_question):
 	choiceSpace := displayNewMessageIn('', 'body/self')
 
 def waitForChoice(p_message):
-	awaitClickBeep(displayNewElementIn(p_message, choiceSpace, 'button', true))
+	awaitClick(displayNewElementIn(p_message, choiceSpace, 'button', true))
 
 def display(p_message):
 	displayNewMessage(p_message)
@@ -539,7 +539,7 @@ displayNewHtmlIn(calljs makeButtons(numberOfButtons), '#gameTable')
 
 while true:
 	var buttonNum := randomIntBetween(1, numberOfButtons)
-	awaitClickBeep('#gameTable > button:nth-of-type(' + buttonNum + ')')
+	awaitClick('#gameTable > button:nth-of-type(' + buttonNum + ')')
 
 # Try to make this program in JavaScript/DOM or your favorite programming language!`
 	],
@@ -594,7 +594,7 @@ displayNewHtmlIn(calljs makeButtons(numberOfButtons), '#gameTable')
 while true:
 	var buttonNum := listToPar(calljs threeRandomNumber(numberOfButtons))
 	parallel forEachValueOf buttonNum:
-		awaitClickBeep('#gameTable > button:nth-of-type(' + buttonNum + ')')
+		awaitClick('#gameTable > button:nth-of-type(' + buttonNum + ')')
 	showNewElementIn('Congratulations!', 'body', 'p/popup', false, 'untilClick')
 
 # Try to make this program in JavaScript/DOM or your favorite programming language!`
@@ -662,7 +662,7 @@ button {
 var initMessage := displayNewMessageIn('I want to cross the river.<br>Help me! Please!', 'body/init')
 repeat 5:
 	num += 1
-	awaitClickBeep('#stone' + num)
+	awaitClick('#stone' + num)
 	removeElt(initMessage)
 	calljs goToStone(num)
 displayNewMessageIn('Thanks! 🙂', 'body/final')`
@@ -753,9 +753,9 @@ parallel ||
 	# The crab/fish is sensitive to clicks: it toggles its color blue or red.
 	#------------------------------------------------------------------------
 	while true:
-		awaitClickBeep('#fish')
+		awaitClick('#fish')
 		fish.style.fill := 'blue'
-		awaitClickBeep('#fish')
+		awaitClick('#fish')
 		fish.style.fill := 'red'
 ||
 	# You can help the frog to cross the river.
@@ -763,7 +763,7 @@ parallel ||
 	var initMessage := displayNewMessageIn('I want to cross the river.<br>Help me! Please!', 'body/init')
 	repeat 5:
 		num += 1
-		awaitClickBeep('#stone' + num)
+		awaitClick('#stone' + num)
 		removeElt(initMessage)
 		calljs goToStone(num)
 	displayNewMessageIn('Thanks! 🙂', 'body/final')
@@ -832,12 +832,12 @@ button {
 var num := 0
 var initMessage := displayNewMessageIn('I want to cross the river.<br>Help me! Please!', 'body/init')
 parallel ||
-	awaitClickBeep('#stone1')
+	awaitClick('#stone1')
 	removeElt(initMessage)
 ||
 	repeat 5:
 		num += 1
-		awaitClickBeep('#stone' + num)
+		awaitClick('#stone' + num)
 		calljs goToStone(num)
 displayNewMessageIn('Thanks! 🙂', 'body/final')`
 	],
@@ -957,7 +957,7 @@ var aligner
 while not isNovalue(remainingCards):
 	parallel(for card in remainingCards, select 1):
 		select:
-			awaitClickBeep(card)
+			awaitClick(card)
 		do:
 			displayMessageIn('<img src="' + (calljs imageOf(player)) + '">', card)
 			card.player := player
@@ -1075,7 +1075,7 @@ while not (calljs isOrdered(buttonList)):
 	var adj := listToPar(calljs getAdjacentButtons(emptyButton))
 	parallel(for button in adj, select 1):
 		select:
-			awaitClickBeep(button)
+			awaitClick(button)
 		do:
 			calljs exchange(button, emptyButton)
 			emptyButton := button
@@ -1183,7 +1183,7 @@ while not isNovalue(allRemainingCards):
 	
 	var allClickedCards := parallel(for anyCard in allRemainingCards, select numberOfCopy):
 		select:
-			awaitClickBeep(anyCard.cardElement)
+			awaitClick(anyCard.cardElement)
 		do:
 			calljs showFace(anyCard)
 			# return the clicked card (which is then "concatenated" to allClickedCards by "allClickedCards := parallel()...")
@@ -1280,7 +1280,7 @@ def findButtons(p_numberOfButtons):
 
 	var buttonNum := listToPar(calljs randomNumbers(p_numberOfButtons))
 	parallel forEachValueOf buttonNum:
-		awaitClickBeep('#gameTableIntern > button:nth-of-type(' + buttonNum + ')')
+		awaitClick('#gameTableIntern > button:nth-of-type(' + buttonNum + ')')
 	displayNewMessageIn('You found them!', gameTable)
 	'Find the buttons'
 
@@ -1289,7 +1289,7 @@ def askForChoice(p_question):
 	choiceSpace := displayNewMessageIn('', 'body/self')
 
 def waitForChoice(p_message):
-	awaitClickBeep(displayNewElementIn(p_message, choiceSpace, 'button', true))
+	awaitClick(displayNewElementIn(p_message, choiceSpace, 'button', true))
 
 askForChoice('Hello! What do you want to play?')
 parallel(select 1) ||
@@ -1498,7 +1498,7 @@ def moveValve(p_valve, p_direction):
 
 parallel:
 	while true:
-		awaitClickBeep(boat)
+		awaitClick(boat)
 		var target := calljs getBoatTarget(boatPosition, gates)
 		if target:
 			boatMovement := true
@@ -1509,51 +1509,51 @@ parallel:
 			setComponentSrc('boat', target.newBoat)
 			boatMovement := false
 	while true:
-		awaitClickBeep(leftGate)
+		awaitClick(leftGate)
 		if waterLevel = 'low':
 			moveGate(leftGate, 'open')
 			setComponentSrc('lightAtLeft', 'light_green')
 			gates := 'leftOpened'
-			awaitClickBeep(leftGate)
+			awaitClick(leftGate)
 			while boatMovement:
-				awaitClickBeep(leftGate)
+				awaitClick(leftGate)
 			gates := 'closed'
 			setComponentSrc('lightAtLeft', 'light_red')
 			moveGate(leftGate, 'close')
 		else:
 			playSoundFile('sound/crash.wav')
 	while true:
-		awaitClickBeep(rightGate)
+		awaitClick(rightGate)
 		if waterLevel = 'high':
 			moveGate(rightGate, 'open')
 			setComponentSrc('lightAtRight', 'light_green')
 			gates := 'rightOpened'
-			awaitClickBeep(rightGate)
+			awaitClick(rightGate)
 			while boatMovement:
-				awaitClickBeep(rightGate)
+				awaitClick(rightGate)
 			gates := 'closed'
 			setComponentSrc('lightAtRight', 'light_red')
 			moveGate(rightGate, 'close')
 		else:
 			playSoundFile('sound/crash.wav')
 	while true:
-		awaitClickBeep(leftValve)
+		awaitClick(leftValve)
 		if gates != 'rightOpened' and openedValve = 'none':
 			waterLevel := 'middle'
 			moveValve(leftValve, 'open')
 			waterLevel := 'low'
-			awaitClickBeep(leftValve)
+			awaitClick(leftValve)
 			moveValve(leftValve, 'close')
 			openedValve := 'none'
 		else:
 			playSoundFile('sound/crash.wav')
 	while true:
-		awaitClickBeep(rightValve)
+		awaitClick(rightValve)
 		if gates != 'leftOpened' and openedValve = 'none':
 			waterLevel := 'middle'
 			moveValve(rightValve, 'open')
 			waterLevel := 'high'
-			awaitClickBeep(rightValve)
+			awaitClick(rightValve)
 			moveValve(rightValve, 'close')
 			openedValve := 'none'
 		else:
@@ -1573,7 +1573,7 @@ parallel:
 		<button id="increment">Count</button>
 	</body>
 </html>`,``,``,`while true:
-	awaitClickBeep('#increment')
+	awaitClick('#increment')
 	displayMessageIn(   1*getText('#count') + 1,   '#count'   )`
 	],
 	//=============================
@@ -1591,7 +1591,7 @@ parallel:
 </html>`,``,``,`parallel:
 	var count := 0
 	while true:
-		awaitClickBeep('#increment')
+		awaitClick('#increment')
 		count += 1
 	while true:
 		awaitBeep count
@@ -1613,10 +1613,10 @@ parallel:
 </html>`,``,``,`parallel:
 	var count := 0
 	while true:
-		awaitClickBeep('#decrement')
+		awaitClick('#decrement')
 		count -= 1
 	while true:
-		awaitClickBeep('#increment')
+		awaitClick('#increment')
 		count += 1
 	while true:
 		awaitBeep count
@@ -2221,15 +2221,15 @@ displayNewMessage("--- THE END ---")`
 	</body>
 </html>`,``,``,`var msg := displayNewMessage('')
 while true:
-	awaitClickBeep('#b0')
+	awaitClick('#b0')
 	displayMessageIn('0', msg)
 	parallel exitAfter 1 finished ||
-		awaitClickBeep('#b1a')
+		awaitClick('#b1a')
 		displayMessageIn('1A', msg)
 	||
-		awaitClickBeep('#b1b')
+		awaitClick('#b1b')
 		displayMessageIn('1B', msg)
-	awaitClickBeep('#b2')
+	awaitClick('#b2')
 	displayMessageIn('2', msg)`
 	],
 	//=============================
@@ -2260,15 +2260,15 @@ while true:
 		waitSeconds(2.5)
 		displayMessageIn('', msg)
 	parallel exitAfter 1 finished ||
-		awaitClickBeep('#b1a')
+		awaitClick('#b1a')
 		displayMessageIn('1A', msg)
 	||
-		awaitClickBeep('#b1b')
+		awaitClick('#b1b')
 		displayMessageIn('1B', msg)
 	||
 		waitSeconds(2)
 		displayMessageIn('too slow', msg)
-	awaitClickBeep('#b2')
+	awaitClick('#b2')
 	displayMessageIn('2', msg)`
 	],
 	//=============================

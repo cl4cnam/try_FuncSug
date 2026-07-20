@@ -64,6 +64,8 @@
 		:await evtSug beep
 }
 
+.var awaitClick <-- $awaitClickBeep
+
 {deffunc getSelectedOption (p_idElt p_evtSug)
 #        --------
 	{ext (p_idElt) `
