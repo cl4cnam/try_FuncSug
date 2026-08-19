@@ -1307,6 +1307,167 @@ displayNewMessage('Congratulations, you have found all identical cards!')
 `
 	],
 	//=============================
+	mastermind: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,`// Guess model
+//--------------
+function getGuessModel(codeLength) {
+	return [...Array(codeLength).keys()].map(
+		n => '<svg width="20" height="20"><circle id="c' + n + '" cx="10" cy="10" r="10" fill="white" stroke="black" /></svg>'
+	).join(' ') +
+	' <button id="check" disabled>Check</button>&nbsp;'
+}
+
+// Colors
+//-------------
+const COLORS = ['white', 'red', 'lime', 'blue', 'yellow', 'magenta', 'cyan', 'orange', 'black', 'purple', 'peru', 'pink', 'gray', 'green', 'teal', 'olive', 'maroon', 'beige', 'silver', 'azure']
+
+function getPaletteModel(numberOfColors) {
+	return \`<svg id="palette" width="\${30*numberOfColors}" height="30" fill="green" style="position: absolute; box-shadow: 5px 5px 10px hsla(0 0 0 / 0.3); left: 20px; top: -20px">
+		<rect x="0" y="0" width="\${30*numberOfColors}" height="30" fill="gray" />
+		\${COLORS.slice(0, numberOfColors).map((color, i) => '<circle cx="' + (30*i + 15) + '" cy="15" r="10" fill="' + color + '" stroke="black" />').join(' ')}
+	</svg>\`
+}
+
+// Combinations
+//----------------
+let secret, guess
+
+function generateSecret(numberOfColors, codeLength, repeatedColors) {
+	const rand = () => Math.floor(Math.random() * numberOfColors)
+	const secretIndices = []
+	for (let i=0; i<codeLength; i++) {
+		let rnd
+		while (  secretIndices.includes(rnd=rand())  &&  !repeatedColors  ) {}
+		secretIndices[i] = rnd
+	}
+	secret = secretIndices.map(elt=>COLORS[elt])
+}
+
+function setGuess(listOfCircle) {
+	guess = listOfCircle.map(circle => circle.getAttribute('fill'))
+}
+
+function checkGuess() {
+	const secretCopy = [...secret]
+	const len = secret.length
+	let rightColorRightPlace_s = 0, rightColorWrongPlace_s = 0
+	for (let i=0; i<len; i++) {
+		if (secretCopy[i] === guess[i]) {
+			rightColorRightPlace_s++
+			secretCopy[i] = guess[i] = NaN
+		}
+	}
+	for (let i=0; i<len; i++) {
+		for (let j=0; j<len; j++) {
+			if (secretCopy[i] === guess[j]) {
+				rightColorWrongPlace_s++
+				secretCopy[i] = guess[j] = NaN
+			}
+		}
+	}
+	return {rightColorRightPlace_s: rightColorRightPlace_s, rightColorWrongPlace_s: rightColorWrongPlace_s, found: rightColorRightPlace_s === len}
+}
+`,`var title := displayNewMessage("🎉 This is a Mastermind game. Discover the right combination! 🎉")
+title.style.margin := 'auto'
+title.style.backgroundColor := '#8ef'
+
+#------------------
+# Get parameters
+#------------------
+def getValueAndDisable(p_id):
+	js (p_id):
+		const elt = document.getElementById(p_id)
+		elt.disabled = true
+		return (elt.type == 'checkbox') ? elt.checked : 1*elt.value
+displayNewMessage("Choose what you prefer!")
+displayNewMessageIn(\`
+	<label for="numberOfColors">Number of colors (2-20):</label>	<input type="number" id="numberOfColors" min="2" max="20" value="6" /><br>
+	<label for="codeLength">Code length (4-10):</label>		<input type="number" id="codeLength" min="4" max="10" value="4" /><br>
+	<label for="maxGuess">Maximum number of guesses (7-20):</label>	<input type="number" id="maxGuess" min="7" max="20" value="10" /><br>
+	<label for="repeatedColors">Repeated  colors :</label>		<input type="checkbox" id="repeatedColors" /><br><br>
+	<button id="start">Start</button>
+\`, 'body/self')
+awaitClick('#start')
+var numberOfColors := getValueAndDisable('numberOfColors')
+var codeLength := getValueAndDisable('codeLength')
+var maxGuess := getValueAndDisable('maxGuess')
+var repeatedColors := getValueAndDisable('repeatedColors')
+
+#------------------
+# Secret code
+#------------------
+if not repeatedColors and numberOfColors < codeLength:
+	displayNewMessage("⚠️ There cannot be a code of length "+ codeLength + " with only " + numberOfColors + " distinct colors")
+	awaitForever()
+else:
+	calljs generateSecret(numberOfColors, codeLength, repeatedColors)
+	displayNewMessage("ℹ️ The secret code is chosen.")
+	displayNewMessage("▶️ Find it! Click dots to change their color!")
+
+#------------------
+# Play
+#------------------
+def getColorFromUser(p_numberOfColors, p_target):
+	p_target.style.strokeWidth := '5px'
+	var paletteParagraph := displayNewHtmlIn(calljs getPaletteModel(numberOfColors), 'p.display.self:last-of-type')
+	js (paletteParagraph):
+		paletteParagraph.style.setProperty('position', 'relative')
+	var palCircleList := js (paletteParagraph):
+		return paletteParagraph.querySelectorAll('#palette circle')
+	parallel(for palCircle in listToPar(palCircleList), select 1):
+		select:
+			sequence:
+				awaitClick(palCircle)
+			onBreak:
+				removeElt('#palette')
+				p_target.style.strokeWidth := '1px'
+		do:
+			js (circle, palCircle):
+				circle.setAttribute('fill', palCircle.getAttribute('fill'))
+
+var guessModel := calljs getGuessModel(codeLength)
+var found := false
+var numberOfGuesses := 0
+while (not found and numberOfGuesses < maxGuess) and (repeatedColors or numberOfColors >= codeLength):
+	var guessMsg := displayNewMessageIn(guessModel, 'body/self')
+	var checkButton := js (guessMsg):
+		return guessMsg.querySelector('#check')
+	var listOfCircle := js (guessMsg, codeLength):
+		return [...Array(codeLength).keys()].map(n => guessMsg.querySelector('#c'+n))
+	parallel exitWith branch 1 ||
+		awaitClick(checkButton)
+		calljs setGuess(listOfCircle)
+		var comparison := calljs checkGuess()
+		found := comparison.found
+		displayNewMessage('ℹ️ Right color, right place: ' + comparison.rightColorRightPlace_s + '
+			&nbsp;&nbsp;&nbsp; Right color, wrong place: ' + comparison.rightColorWrongPlace_s)
+	||
+		while true:
+			parallel(for circle in listToPar(listOfCircle), select 1):
+				select:
+					awaitClick(circle)
+				do:
+					getColorFromUser(numberOfColors, circle)
+	numberOfGuesses += 1
+
+#------------------
+# The end
+#------------------
+if found:
+	displayNewMessage("🎉 😃 Congratulations! You found it! 😃 🎉")
+else:
+	displayNewMessage("The maximum number of attempts has been reached. You might have better luck another time 🙂")
+`
+	],
+	//=============================
 	chooseGame: ['text',
 		`<!DOCTYPE html>
 <html>
