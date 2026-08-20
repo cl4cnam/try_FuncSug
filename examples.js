@@ -1974,6 +1974,33 @@ parallel:
 			addCssClassTo('notSync', 'body')`
 	],
 	//=============================
+	dontClickButton: ['text',
+		`<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+	</body>
+</html>`,``,``,`displayNewMessage("Don't click the button. It will be clicked by the program.")
+waitSeconds(1)
+displayNewMessage(\`<button id="mybutton">Don't click me!</button>\`)
+
+parallel(select 1) ||
+||====================
+	awaitClick('#mybutton')
+...---
+	displayNewMessage('The button has been clicked.')
+||====================
+	waitSeconds(2)
+
+	# Simulate the click of a mouse
+	generateUserEvent('#mybutton', 'click')
+...---
+	displayNewMessage("I know you didn't do it!")`
+	],
+	//=============================
 	workflow1: ['text',
 		`<!DOCTYPE html>
 <html>
